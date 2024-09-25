@@ -1,0 +1,219 @@
+[
+  {
+    "resource": "https://api.prod.metamap.com/v2/verifications/66f2c51c89376d001d0dc093",
+    "eventName": "verification_expired",
+    "flowId": "66db9438e9b632001dc638ec",
+    "timestamp": "2024-09-24T15:36:39.874Z"
+  },
+  {
+    "resource": "https://api.prod.metamap.com/v2/verifications/66f2dc4105f068001d610a1b",
+    "step": {
+      "status": 200,
+      "id": "template-matching",
+      "error": null,
+      "documentType": "national-id"
+    },
+    "eventName": "step_completed",
+    "flowId": "66db9438e9b632001dc638ec",
+    "timestamp": "2024-09-24T15:37:15.949Z"
+  },
+  {
+    "resource": "https://api.prod.metamap.com/v2/verifications/66f2dc4105f068001d610a1b",
+    "step": {
+      "status": 200,
+      "id": "age-check",
+      "data": {
+        "age": 23,
+        "ageThreshold": 18,
+        "underage": false
+      },
+      "error": null,
+      "documentType": "national-id"
+    },
+    "eventName": "step_completed",
+    "flowId": "66db9438e9b632001dc638ec",
+    "timestamp": "2024-09-24T15:37:19.971Z"
+  },
+  {
+    "resource": "https://api.prod.metamap.com/v2/verifications/66f2dc4105f068001d610a1b",
+    "eventName": "verification_inputs_completed",
+    "flowId": "66db9438e9b632001dc638ec",
+    "timestamp": "2024-09-24T15:37:33.464Z"
+  },
+  {
+    "resource": "https://api.prod.metamap.com/v2/verifications/66f2dc4105f068001d610a1b",
+    "step": {
+      "status": 200,
+      "id": "email-ownership-validation",
+      "data": {
+        "emailAddress": "nagza208@gmail.com"
+      },
+      "error": null
+    },
+    "eventName": "step_completed",
+    "flowId": "66db9438e9b632001dc638ec",
+    "timestamp": "2024-09-24T15:37:34.605Z"
+  },
+  {
+    "resource": "https://api.prod.metamap.com/v2/verifications/66f2dc4105f068001d610a1b",
+    "deviceFingerprint": {
+      "ua": "Mozilla/5.0 (iPhone; CPU iPhone OS 18_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.0 Mobile/15E148 Safari/604.1",
+      "browser": {
+        "name": "Mobile Safari",
+        "version": "18.0",
+        "major": "18"
+      },
+      "engine": {
+        "name": "WebKit",
+        "version": "605.1.15"
+      },
+      "os": {
+        "name": "iOS",
+        "version": "18.0"
+      },
+      "device": {
+        "vendor": "Apple",
+        "model": "iPhone",
+        "type": "mobile"
+      },
+      "app": {
+        "platform": "web_mobile",
+        "version": "22.3.5"
+      },
+      "ip": "102.89.22.229",
+      "origin": "https://signup.metamap.com",
+      "vpnDetectionEnabled": false
+    },
+    "identityStatus": "verified",
+    "details": {
+      "age": {
+        "data": 23
+      }
+    },
+    "matiDashboardUrl": "https://dashboard.getmati.com/identity/66f2dc4105f068001d610a1a/verification/66f2dc4105f068001d610a1b",
+    "status": "verified",
+    "eventName": "verification_completed",
+    "flowId": "66db9438e9b632001dc638ec",
+    "timestamp": "2024-09-24T15:37:36.799Z"
+  },
+  {
+    "resource": "https://api.prod.metamap.com/v2/verifications/66f2dc4105f068001d610a1b",
+    "deviceFingerprint": {
+      "ua": "Mozilla/5.0 (iPhone; CPU iPhone OS 18_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.0 Mobile/15E148 Safari/604.1",
+      "browser": {
+        "name": "Mobile Safari",
+        "version": "18.0",
+        "major": "18"
+      },
+      "engine": {
+        "name": "WebKit",
+        "version": "605.1.15"
+      },
+      "os": {
+        "name": "iOS",
+        "version": "18.0"
+      },
+      "device": {
+        "vendor": "Apple",
+        "model": "iPhone",
+        "type": "mobile"
+      },
+      "app": {
+        "platform": "web_mobile",
+        "version": "22.3.5"
+      },
+      "ip": "102.89.22.229",
+      "origin": "https://signup.metamap.com",
+      "vpnDetectionEnabled": false
+    },
+    "identityStatus": "verified",
+    "details": {
+      "age": {
+        "data": 23
+      }
+    },
+    "matiDashboardUrl": "https://dashboard.getmati.com/identity/66f2dc4105f068001d610a1a/verification/66f2dc4105f068001d610a1b",
+    "status": "verified",
+    "eventName": "verification_completed",
+    "flowId": "66db9438e9b632001dc638ec",
+    "timestamp": "2024-09-24T15:37:39.088Z"
+  },
+  {
+    "resource": "https://api.prod.metamap.com/v2/verifications/66f2c51c89376d001d0dc093",
+    "eventName": "verification_expired",
+    "flowId": "66db9438e9b632001dc638ec",
+    "timestamp": "2024-09-24T15:37:40.284Z"
+  },
+  {
+    "resource": "https://api.prod.metamap.com/v2/verifications/66f2dc4105f068001d610a1b",
+    "step": {
+      "status": 200,
+      "id": "email-ownership-validation",
+      "data": {
+        "emailAddress": "nagza208@gmail.com"
+      },
+      "error": null
+    },
+    "eventName": "step_completed",
+    "flowId": "66db9438e9b632001dc638ec",
+    "timestamp": "2024-09-24T15:37:41.571Z"
+  },
+  {
+    "resource": "https://api.prod.metamap.com/v2/verifications/66f2c51c89376d001d0dc093",
+    "eventName": "verification_expired",
+    "flowId": "66db9438e9b632001dc638ec",
+    "timestamp": "2024-09-24T15:37:40.284Z"
+  },
+  {
+    "resource": "https://api.prod.metamap.com/v2/verifications/66f2dc4105f068001d610a1b",
+    "step": {
+      "status": 200,
+      "id": "email-ownership-validation",
+      "data": {
+        "emailAddress": "nagza208@gmail.com"
+      },
+      "error": null
+    },
+    "eventName": "step_completed",
+    "flowId": "66db9438e9b632001dc638ec",
+    "timestamp": "2024-09-24T15:37:45.868Z"
+  },
+  {
+    "resource": "https://api.prod.metamap.com/v2/verifications/66f2c51c89376d001d0dc093",
+    "eventName": "verification_expired",
+    "flowId": "66db9438e9b632001dc638ec",
+    "timestamp": "2024-09-24T15:36:39.874Z"
+  },
+  {
+    "resource": "https://api.prod.metamap.com/v2/verifications/66f2dc4105f068001d610a1b",
+    "step": {
+      "status": 200,
+      "id": "email-ownership-validation",
+      "data": {
+        "emailAddress": "nagza208@gmail.com"
+      },
+      "error": null
+    },
+    "eventName": "step_completed",
+    "flowId": "66db9438e9b632001dc638ec",
+    "timestamp": "2024-09-24T15:37:51.625Z"
+  },
+  {
+    "resource": "https://api.prod.metamap.com/v2/verifications/66f2c51c89376d001d0dc093",
+    "eventName": "verification_expired",
+    "flowId": "66db9438e9b632001dc638ec",
+    "timestamp": "2024-09-24T15:37:40.284Z"
+  },
+  {
+    "resource": "https://api.prod.metamap.com/v2/verifications/66f2c51c89376d001d0dc093",
+    "eventName": "verification_expired",
+    "flowId": "66db9438e9b632001dc638ec",
+    "timestamp": "2024-09-24T15:35:39.512Z"
+  },
+  {
+    "resource": "https://api.prod.metamap.com/v2/verifications/66f2c51c89376d001d0dc093",
+    "eventName": "verification_expired",
+    "flowId": "66db9438e9b632001dc638ec",
+    "timestamp": "2024-09-24T15:37:40.284Z"
+  }
+]
