@@ -53,17 +53,19 @@ class CommentController {
                 }
             }
 
-            const commentAttachments = await uploadToS3()
-            await prismaQuery.postCommentAttachments.createMany({
-                data: commentAttachments.map((attachment) => {
-                    return {
-                        comment_id: newComment.id,
-                        name: attachment,
-                        path: `${process.env.CLOUDFRONT_URL}${attachment}`,
-                        type: "image",
-                    };
+            if (files) {
+                const commentAttachments = await uploadToS3()
+                await prismaQuery.postCommentAttachments.createMany({
+                    data: commentAttachments.map((attachment) => {
+                        return {
+                            comment_id: newComment.id,
+                            name: attachment,
+                            path: `${process.env.CLOUDFRONT_URL}${attachment}`,
+                            type: "image",
+                        };
+                    })
                 })
-            })
+            }
 
             const thisComment = await prismaQuery.postComment.findUnique({
                 where: {

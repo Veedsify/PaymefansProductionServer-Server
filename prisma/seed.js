@@ -1,4 +1,4 @@
-import { PrismaClient } from '@prisma/client'
+const { PrismaClient } = require('@prisma/client')
 
 const prisma = new PrismaClient()
 const uniqueUserId = Math.random().toString(36).substring(2, 15);
