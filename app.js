@@ -7,6 +7,7 @@ var cors = require("cors");
 var indexRouter = require("./routes/index");
 var apiRouter = require("./routes/api");
 var adminRouter = require("./routes/admin");
+var verificationRouter = require("./routes/verification");
 var session = require("express-session");
 const { SESSION_SECRET } = process.env;
 var app = express();
@@ -45,7 +46,9 @@ LiveServerSocket(http);
 app.use("/", indexRouter);
 app.use("/api", apiRouter);
 app.use("/admin", adminRouter);
-// catch 404 and forward to error handler
+app.use("/verification", verificationRouter);
+
+// catch 404 and forward to error handler`
 app.use(function (req, res, next) {
   next(createError(404));
 });
