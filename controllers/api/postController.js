@@ -5,6 +5,7 @@ const path = require("path");
 const {processPostMedia} = require("../../utils/cloudflare");
 const HandleMedia = require("../../utils/handle-post-media");
 const {UpdatePostAudience} = require("../../services/posts/update-post-audience");
+const {handleRepostService} = require("../../services/posts/handlerepost.service");
 const {SERVER_ORIGINAL_URL, CLOUDFLARE_ACCOUNT_ID, CLOUDFLARE_CUSTOMER_CODE} = process.env;
 require("dotenv").config();
 
@@ -674,6 +675,29 @@ class PostController {
             })
             console.log(error);
         }
+    }
+
+    static async CreateRepost(req, res) {
+        const handleRepost = await handleRepostService({
+            post_id: req.params.post_id,
+            user: req.user
+        })
+
+        if (handleRepost.error) {
+            return res.status(400).json({
+                status: false,
+                message: handleRepost.message
+            })
+        }
+
+        return res.status(200).json({
+            status: true,
+            message: handleRepost.message
+        })
+    }
+
+    static async MyReposts (req, res){
+        
     }
 }
 

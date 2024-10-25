@@ -46,12 +46,15 @@ router.post("/profile/image/change", checkUserIsAuthenticated, multerImageMiddle
 // Post & Home 
 router.post("/post/create", checkUserIsAuthenticated, multerPostMiddleware.array("media[]"), CreatePost);
 router.get("/user/posts", checkUserIsAuthenticated, GetMyPosts);
+router.get("/user/reposts", checkUserIsAuthenticated, PostController.MyReposts);
 router.get("/user/media", checkUserIsAuthenticated, GetMyMedia);
 router.get("/profile/media/:userid", checkUserIsAuthenticated, GetUsersMedia);
 router.get("/user/:userid/posts", checkUserIsAuthenticated, GetUserPostByID);
 router.get("/posts/:post_id", GetCurrentUserPost);
 router.get("/editpost/:post_id", checkUserIsAuthenticated, PostController.EditPost);
 router.put('/post/:post_id', checkUserIsAuthenticated, PostController.UpdatePost);
+router.post('/post/repost/:post_id', checkUserIsAuthenticated, PostController.CreateRepost);
+
 // Post Interactions
 router.post("/post/like/:post_id", checkUserIsAuthenticated, likePost);
 router.delete("/post/:post_id", checkUserIsAuthenticated, PostController.DeletePost);
