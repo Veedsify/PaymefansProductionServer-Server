@@ -21,7 +21,8 @@ module.exports = async (data, req) => {
                     verification_state: "started"
                }
           })
-          return { error: false, message: "Verification started" }
+
+          return { error: false, message: "Verification started", token:  checkIfStarted.token}
      } catch (error) {
           return { error: true, message: error.message }
      }

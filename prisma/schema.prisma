@@ -120,7 +120,7 @@ model Model {
   verification_image  String?               @db.LongText
   verification_status Boolean               @default(false)
   verification_state  VerificationStateEnum @default(not_started)
-  payment_reference   String?               @db.LongText
+  token   String?               @db.LongText
 
   user User @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
 
