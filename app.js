@@ -17,7 +17,7 @@ const serverSocket = require("./utils/socket");
 const LiveServerSocket = require("./utils/socket-live");
 app.use(
   cors({
-    origin: process.env.APP_URL,
+    origin: [process.env.APP_URL, process.env.VERIFICATION_URL],
     credentials: true,
     optionsSuccessStatus: 200,
   })

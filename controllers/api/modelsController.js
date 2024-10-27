@@ -139,7 +139,7 @@ class modelController {
                     hookup: available === "yes",
                     audience,
                     verification_status: false,
-                    payment_reference: referenceId
+                    token: referenceId
                 }
             });
 

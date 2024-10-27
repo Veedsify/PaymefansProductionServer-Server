@@ -11,7 +11,7 @@ class VerificationController {
                          if (startVerification.error) {
                               return res.status(500).json({ error: true, message: startVerification.message });
                          }
-                         return res.status(200).json({ error: false, message: startVerification.message });
+                         return res.status(200).json({ error: false, message: startVerification.message, token: startVerification.token });
                     default:
                          return res.status(400).json({ error: true, message: "Invalid action" });
                }
