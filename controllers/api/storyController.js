@@ -25,38 +25,22 @@ class StoryController {
         try {
             // Save stories
             const story_id = uuidV4()
-
             await prismaQuery.userStory.create({
                 data: {
                     user_id: req.user.id,
                     story_id,
-                    story: "This is a story",
-                    storyType: "text",
-                    expected_end: new Date() + 24 * 60 * 60 * 1000, // 24 hours
                     StoryMedia: {
-                        createMany: {
-                            data: [...stories.map((story) => {
-                                return {
-                                    media_id: uuidV4(),
-                                    media_type: story.media_type,
-                                    url: story.media_url,
-                                }
-                            })]
-                        }
-                    }
-                }
-            })
-            // await prismaQuery.storyMedia.createMany({
-            //     data: [
-            //         ...stories.map((story) => {
-            //             return {
-            //                 userId: req.user.id,
-            //                 mediaUrl: story.filename,
-            //                 mediaType: story.mimetype.startsWith('image') ? 'image' : 'video',
-            //             }
-            //         })
-            //     ]
-            // })
+                        create: stories.map((story) => ({
+                            media_id: uuidV4(),
+                            media_type: story.media_type,
+                            filename: story.media_url,
+                            url: story.media_url,
+                            story_content: story.caption,
+                            captionStyle: story.captionStyle,
+                        })),
+                    },
+                },
+            });            
 
             return res.status(200).json({
                 success: true,

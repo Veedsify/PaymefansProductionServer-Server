@@ -120,7 +120,7 @@ model Model {
   verification_image  String?               @db.LongText
   verification_status Boolean               @default(false)
   verification_state  VerificationStateEnum @default(not_started)
-  token   String?               @db.LongText
+  token               String?               @db.LongText
 
   user User @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
 
@@ -175,6 +175,7 @@ model StoryMedia {
   media_id      String
   media_type    String
   filename      String
+  captionStyle  Json?      @db.Json
   story_content String?   @db.LongText
   url           String    @db.LongText
   story         UserStory @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
