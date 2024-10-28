@@ -715,8 +715,9 @@ class PostController {
             });
 
             if (userRepostCount === 0) {
-                return res.status(404).json({
+                return res.status(200).json({
                     status: false,
+                    data: [],
                     message: "No reposts found"
                 })
             }
