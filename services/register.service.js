@@ -41,7 +41,9 @@ module.exports = async (body) => {
         await createConversation(adminUserId.user_id, uniqueUserId, conversationId);
         await createWelcomeMessage(user.username, adminUserId.user_id, conversationId);
         await createNotification(user.id, user.fullname);
+        await CreateFollowing(adminUserId.user_id, user.user_id);
 
+        // Send Welcome Email
         await sendWelcomeEmail(user.email, user.username);
         return user;
 
@@ -138,3 +140,14 @@ const createNotification = async (userId, fullname) => {
         }
     });
 };
+
+const CreateFollowing = async (userId, followingId) => {
+    const uuid = generateUniqueId();
+    return prismaQuery.follow.create({
+        data: {
+            user_id: userId,
+            follow_id: uuid,
+            follower_id: followingId
+        }
+    });
+}
