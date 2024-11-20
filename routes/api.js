@@ -112,7 +112,7 @@ router.get("/conversation/get-messages/:conversation", checkUserIsAuthenticated,
 router.post("/conversation/create-new", checkUserIsAuthenticated, ConversationsController.createConversation);
 router.get("/conversations/my-conversations", checkUserIsAuthenticated, ConversationsController.myConversations);
 router.post("/upload/attachments", checkUserIsAuthenticated, uploadAttachmentMulterMiddleware.array("attachments[]"), uploadMediaController.attachments);
-
+router.post('/search/messages/:conversationId', checkUserIsAuthenticated, ConversationsController.SearchMessages)
 // Comments
 router.post("/comment/new", checkUserIsAuthenticated, commentAttachmentMiddleware("files"), NewPostComment)
 

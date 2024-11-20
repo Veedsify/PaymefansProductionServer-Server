@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+     <meta charset="UTF-8">
+     <title>PayMeFans Additional Emails</title>
+     <!-- Previous styles remain the same -->
+     <style>
+          @import url('https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;500;600&display=swap');
+
+          * {
+               margin: 0;
+               padding: 0;
+               box-sizing: border-box;
+          }
+
+          body {
+               font-family: 'Lexend','Trebuchet MS' ,'Ubuntu','Open Sans', Arial, sans-serif;
+               line-height: 1.6;
+               color: #4a4a4a;
+               background-color: #f9f9f9;
+          }
+
+          .main-table {
+               width: 100%;
+               max-width: 600px;
+               margin: 0 auto;
+               background-color: #ffffff;
+               border-spacing: 0;
+               border-collapse: collapse;
+               box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+          }
+
+          .header {
+               padding: 30px 40px;
+               background: linear-gradient(135deg, #ffffff 0%, #fcfaff 100%);
+               border-bottom: 1px solid #f0e6f6;
+          }
+
+          .logo {
+               height: 40px;
+               margin-bottom: 5px;
+               color: #a94296;
+          }
+
+          .content {
+               padding: 40px;
+               background-color: #ffffff;
+          }
+
+          .illustration-container {
+               text-align: center;
+               margin: 30px 0;
+               padding: 20px;
+          }
+
+          .illustration {
+               max-width: 300px;
+               height: auto;
+          }
+
+          .title {
+               color: #a94296;
+               font-size: 24px;
+               font-weight: 500;
+               margin-bottom: 20px;
+               letter-spacing: -0.5px;
+          }
+
+          .text {
+               color: #666;
+               font-size: 16px;
+               line-height: 1.6;
+               margin-bottom: 25px;
+          }
+
+          .btn {
+               display: inline-block;
+               padding: 14px 28px;
+               background-color: #a94296;
+               color: white;
+               text-decoration: none;
+               border-radius: 8px;
+               font-weight: 500;
+               margin: 20px 0;
+               transition: background-color 0.3s ease;
+          }
+
+          .btn:hover {
+               background-color: #8d357c;
+          }
+
+          .secondary-btn {
+               background-color: #f7f1f9;
+               color: #9d3d8c;
+               margin-left: 15px;
+          }
+
+          .footer {
+               background-color: #fcfaff;
+               padding: 30px 40px;
+               text-align: center;
+               border-top: 1px solid #f0e6f6;
+          }
+
+          .footer-links a {
+               color: #9d3d8c;
+               text-decoration: none;
+               margin: 0 15px;
+               font-size: 14px;
+          }
+
+          .divider {
+               height: 1px;
+               background-color: #f0e6f6;
+               margin: 30px 0;
+          }
+
+          .info-box {
+               background-color: #fcfaff;
+               border-radius: 8px;
+               padding: 20px;
+               margin: 20px 0;
+          }
+
+          .transaction-table {
+               width: 100%;
+               margin: 25px 0;
+               border-collapse: collapse;
+          }
+
+          .transaction-table th {
+               background-color: #fcfaff;
+               padding: 12px;
+               text-align: left;
+               color: #9d3d8c;
+               font-weight: 500;
+          }
+
+          .transaction-table td {
+               padding: 12px;
+               border-top: 1px solid #f0e6f6;
+          }
+
+          /* Additional styles for new templates */
+          .countdown {
+               background: #fcfaff;
+               border-radius: 8px;
+               padding: 20px;
+               text-align: center;
+               margin: 20px 0;
+          }
+
+          .countdown-number {
+               font-size: 32px;
+               color: #9d3d8c;
+               font-weight: 600;
+               margin: 10px 0;
+          }
+
+          .status-badge {
+               display: inline-block;
+               padding: 6px 12px;
+               border-radius: 20px;
+               font-size: 14px;
+               font-weight: 500;
+               margin-bottom: 20px;
+          }
+
+          .status-success {
+               background-color: #e8f5e9;
+               color: #2e7d32;
+          }
+
+          .status-pending {
+               background-color: #fff3e0;
+               color: #ef6c00;
+          }
+
+          .status-error {
+               background-color: #ffebee;
+               color: #c62828;
+          }
+
+          .message-preview {
+               background: #fcfaff;
+               border-radius: 8px;
+               padding: 20px;
+               margin: 20px 0;
+               border-left: 4px solid #9d3d8c;
+          }
+
+          .avatar {
+               width: 48px;
+               height: 48px;
+               border-radius: 50%;
+               margin-right: 15px;
+          }
+
+          .flex {
+               display: flex;
+               align-items: center;
+          }
+
+          .amount {
+               font-size: 24px;
+               color: #9d3d8c;
+               font-weight: 600;
+               margin: 15px 0;
+          }
+     </style>
+</head>
+
+<body>
+     <!-- Template 1: Live Stream Invitation -->
+     <table class="main-table">
+          <tr>
+               <td class="header">
+                    <svg class="logo" viewBox="0 0 24 24">
+                         <!-- Simple placeholder logo - replace with actual logo -->
+                         <path fill="currentColor" d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" />
+                    </svg>
+               </td>
+          </tr>
+          <tr>
+               <td class="content">
+                    <h1 class="title">🎥 Live Stream Starting Soon!</h1>
+                    <div class="illustration-container">
+                         <img src="/api/placeholder/300/200" alt="Live Stream" class="illustration" />
+                    </div>
+                    <div class="countdown">
+                         <p>Stream starts in</p>
+                         <div class="countdown-number">30:00</div>
+                         <p>minutes</p>
+                    </div>
+                    <p class="text">Join [Creator Name] for an exclusive live stream session! Don't miss out on special
+                         announcements and interactive Q&A.</p>
+                    <div style="text-align: center;">
+                         <a href="#" class="btn">Join Stream</a>
+                         <a href="#" class="btn secondary-btn">Add to Calendar</a>
+                    </div>
+                    <div class="info-box">
+                         <p style="margin: 0;">🎁 First 50 viewers get exclusive rewards!</p>
+                    </div>
+               </td>
+          </tr>
+          <tr>
+               <td class="footer">
+                    <div class="footer-links">
+                         <a href="#">Terms</a>
+                         <a href="#">Privacy</a>
+                         <a href="#">Support</a>
+                    </div>
+               </td>
+          </tr>
+     </table>
+
+     <!-- Template 2: Withdrawal Received -->
+     <table class="main-table">
+          <tr>
+               <td class="header">
+                    <!-- [Previous logo SVG] -->
+               </td>
+          </tr>
+          <tr>
+               <td class="content">
+                    <h1 class="title">Withdrawal Request Received</h1>
+                    <div class="status-badge status-pending">Processing</div>
+                    <div class="illustration-container">
+                         <img src="/api/placeholder/300/200" alt="Withdrawal" class="illustration" />
+                    </div>
+                    <div class="amount">$1,250.00</div>
+                    <p class="text">We've received your withdrawal request and it's being processed. This usually takes
+                         1-3 business days.</p>
+                    <table class="transaction-table">
+                         <tr>
+                              <th>Details</th>
+                              <th style="text-align: right;">Status</th>
+                         </tr>
+                         <tr>
+                              <td>Request ID</td>
+                              <td style="text-align: right;">#WD12345</td>
+                         </tr>
+                         <tr>
+                              <td>Bank Account</td>
+                              <td style="text-align: right;">****6789</td>
+                         </tr>
+                    </table>
+                    <div class="info-box">
+                         <p style="margin: 0;">📅 Estimated completion: [Date]</p>
+                    </div>
+               </td>
+          </tr>
+          <tr>
+               <td class="footer">
+                    <!-- [Previous footer content] -->
+               </td>
+          </tr>
+     </table>
+
+     <!-- Template 3: Withdrawal Successful -->
+     <table class="main-table">
+          <tr>
+               <td class="header">
+                    <!-- [Previous logo SVG] -->
+               </td>
+          </tr>
+          <tr>
+               <td class="content">
+                    <h1 class="title">Withdrawal Complete! 🎉</h1>
+                    <div class="status-badge status-success">Completed</div>
+                    <div class="illustration-container">
+                         <img src="/api/placeholder/300/200" alt="Success" class="illustration" />
+                    </div>
+                    <div class="amount">$1,250.00</div>
+                    <p class="text">Your withdrawal has been successfully processed and sent to your bank account.</p>
+                    <table class="transaction-table">
+                         <tr>
+                              <th>Details</th>
+                              <th style="text-align: right;">Information</th>
+                         </tr>
+                         <tr>
+                              <td>Transaction ID</td>
+                              <td style="text-align: right;">#WD12345</td>
+                         </tr>
+                         <tr>
+                              <td>Bank Account</td>
+                              <td style="text-align: right;">****6789</td>
+                         </tr>
+                         <tr>
+                              <td>Date Completed</td>
+                              <td style="text-align: right;">[Date]</td>
+                         </tr>
+                    </table>
+               </td>
+          </tr>
+          <tr>
+               <td class="footer">
+                    <!-- [Previous footer content] -->
+               </td>
+          </tr>
+     </table>
+
+     <!-- Template 4: Account Banned -->
+     <table class="main-table">
+          <tr>
+               <td class="header">
+                    <!-- [Previous logo SVG] -->
+               </td>
+          </tr>
+          <tr>
+               <td class="content">
+                    <h1 class="title">Account Suspended</h1>
+                    <div class="status-badge status-error">Suspended</div>
+                    <div class="illustration-container">
+                         <img src="/api/placeholder/300/200" alt="Account Suspended" class="illustration" />
+                    </div>
+                    <p class="text">Your account has been suspended due to violations of our community guidelines. This
+                         decision was made after careful review of your account activity.</p>
+                    <div class="info-box">
+                         <p style="margin: 0; color: #c62828;">Reason: [Violation details]</p>
+                    </div>
+                    <div style="text-align: center;">
+                         <a href="#" class="btn">Appeal Decision</a>
+                         <a href="#" class="btn secondary-btn">View Guidelines</a>
+                    </div>
+               </td>
+          </tr>
+          <tr>
+               <td class="footer">
+                    <!-- [Previous footer content] -->
+               </td>
+          </tr>
+     </table>
+
+     <!-- Template 5: New Subscription Added -->
+     <table class="main-table">
+          <tr>
+               <td class="header">
+                    <!-- [Previous logo SVG] -->
+               </td>
+          </tr>
+          <tr>
+               <td class="content">
+                    <h1 class="title">New Subscription Started! ⭐</h1>
+                    <div class="illustration-container">
+                         <img src="/api/placeholder/300/200" alt="Subscription" class="illustration" />
+                    </div>
+                    <div class="flex" style="justify-content: center; margin: 20px 0;">
+                         <img src="/api/placeholder/48/48" alt="Creator" class="avatar" />
+                         <div>
+                              <h3 style="margin: 0;">Creator Name</h3>
+                              <p style="margin: 0; color: #666;">Premium Tier</p>
+                         </div>
+                    </div>
+                    <p class="text">You now have access to exclusive content from [Creator Name]. Your subscription is
+                         active and will renew on [Date].</p>
+                    <div style="text-align: center;">
+                         <a href="#" class="btn">View Content</a>
+                    </div>
+                    <div class="info-box">
+                         <p style="margin: 0;">✨ Unlock exclusive perks with your subscription!</p>
+                    </div>
+               </td>
+          </tr>
+          <tr>
+               <td class="footer">
+                    <!-- [Previous footer content] -->
+               </td>
+          </tr>
+     </table>
+
+     <!-- Template 6: New Subscriber -->
+     <table class="main-table">
+          <tr>
+               <td class="header">
+                    <!-- [Previous logo SVG] -->
+               </td>
+          </tr>
+          <tr>
+               <td class="content">
+                    <h1 class="title">New Subscriber! 🎉</h1>
+                    <div class="illustration-container">
+                         <img src="/api/placeholder/300/200" alt="New Subscriber" class="illustration" />
+                    </div>
+                    <div class="flex" style="justify-content: center; margin: 20px 0;">
+                         <img src="/api/placeholder/48/48" alt="Subscriber" class="avatar" />
+                         <div>
+                              <h3 style="margin: 0;">[Username]</h3>
+                              <p style="margin: 0; color: #666;">Premium Subscriber</p>
+                         </div>
+                    </div>
+                    <p class="text">You have a new subscriber! [Username] has subscribed to your Premium tier.</p>
+                    <div class="info-box">
+                         <p style="margin: 0;">💫 Your subscriber count: [Number]</p>
+                    </div>
+                    <div style="text-align: center;">
+                         <a href="#" class="btn">View Profile</a>
+                         <a href="#" class="btn secondary-btn">Send Welcome</a>
+                    </div>
+               </td>
+          </tr>
+          <tr>
+               <td class="footer">
+                    <!-- [Previous footer content] -->
+               </td>
+          </tr>
+     </table>
+
+     <!-- Template 7: Product Purchase -->
+     <table class="main-table">
+          <tr>
+               <td class="header">
+                    <!-- [Previous logo SVG] -->
+               </td>
+          </tr>
+          <tr>
+               <td class="content">
+                    <h1 class="title">Purchase Successful! 🛍️</h1>
+                    <div class="status-badge status-success">Confirmed</div>
+                    <div class="illustration-container">
+                         <img src="/api/placeholder/300/200" alt="Purchase" class="illustration" />
+                    </div>
+                    <p class="text">Thank you for your purchase! Here's your order summary:</p>
+                    <table class="transaction-table">
+                         <tr>
+                              <th>Item</th>
+                              <th style="text-align: right;">Price</th>
+                         </tr>
+                         <tr>
+                              <td>[Product Name]</td>
+                              <td style="text-align: right;">$XX.XX</td>
+                         </tr>
+                         <tr>
+                              <td style="font-weight: 500;">Total</td>
+                              <td style="text-align: right; font-weight: 500;">$XX.XX</td>
+                         </tr>
+                    </table>
+                    <div style="text-align: center;">
+                         <a href="#" class="btn">View Order</a>
+                    </div>
+               </td>
+          </tr>
+          <tr>
+               <td class="footer">
+                    <!-- [Previous footer content] -->
+               </td>
+          </tr>
+     </table>
+
+     <!-- Template 8: New Message -->
+     <table class="main-table">
+          <tr>
+               <td class="header">
+                    <!-- [Previous logo SVG] -->
+               </td>
+          </tr>
+          <tr>
+               <td class="content">
+                    <h1 class="title">New Message 💌</h1>
+                    <div class="flex" style="margin: 20px 0;">
+                         <img src="/api/placeholder/48/48" alt="Sender" class="avatar" />
+                         <div>
+                              <h3 style="margin: 0;">[Sender Name]</h3>
+                              <p style="margin: 0; color: #666;">Premium Creator</p>
+                         </div>
+                    </div>
+                    <div class="message-preview">
+                         <p style="margin: 0; color: #666;">Message preview...</p>
+                    </div>
+                    <div style="text-align: center;">
+                         <a href="#" class="btn">Read Message</a>
+                         <a href="#" class="btn secondary-btn">View Profile</a>
+                    </div>
+               </td>
+          </tr>
+          <tr>
+               <td class="footer">
+                    <!-- [Previous footer content] -->
+               </td>
+          </tr>
+     </table>
+</body>
+
+</html>

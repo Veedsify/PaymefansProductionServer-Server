@@ -143,7 +143,7 @@ class authController {
                 const data = { user: { ...rest, following }, status: true };
                 return res.status(200).json(bigIntToString(data));
             } else {
-                return res.status(404).json({ message: "User not found", status: false });
+                return res.status(401).json({ message: "User not found", status: false });
             }
         } catch (error) {
             console.log(error);

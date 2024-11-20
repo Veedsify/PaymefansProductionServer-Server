@@ -2,8 +2,8 @@ const jwt = require("jsonwebtoken");
 
 module.exports = async (req, res, next) => {
 
-
   try {
+      console.log(req.headers)
     if (!req.headers) {
       return res
         .status(401)

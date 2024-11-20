@@ -15,9 +15,11 @@ var debug = require("debug")("express-server:server");
 const http = require("http").createServer(app);
 const serverSocket = require("./utils/socket");
 const LiveServerSocket = require("./utils/socket-live");
+const { ADMIN_PANEL_URL, VERIFICATION_URL, APP_URL } = process.env;
+
 app.use(
   cors({
-    origin: [process.env.APP_URL, process.env.VERIFICATION_URL],
+    origin: [VERIFICATION_URL, ADMIN_PANEL_URL, APP_URL],
     credentials: true,
     optionsSuccessStatus: 200,
   })
@@ -37,7 +39,6 @@ app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
-
 
 // Socket
 serverSocket(http);
@@ -61,7 +62,7 @@ app.use(function (err, req, res, next) {
   res.status(err.status || 500);
   res.render("error");
 });
-http.listen(process.env.PORT, () => { });
+http.listen(process.env.PORT, () => {});
 http.on("error", onError);
 http.on("listening", onListening);
 function onError(error) {
