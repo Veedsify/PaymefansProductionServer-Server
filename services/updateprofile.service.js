@@ -7,7 +7,7 @@ module.exports = async (path, req) => {
         user_id: req.user.user_id,
       },
       data: {
-        profile_image: path,
+        profile_image: path.trim(),
       },
     });
     prismaQuery.$disconnect();

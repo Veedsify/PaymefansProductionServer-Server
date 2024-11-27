@@ -60,7 +60,7 @@ class CommentController {
                         return {
                             comment_id: newComment.id,
                             name: attachment,
-                            path: `${process.env.CLOUDFRONT_URL}${attachment}`,
+                            path: `${process.env.CLOUDFRONT_URL}${attachment}`.trim(),
                             type: "image",
                         };
                     })

@@ -49,6 +49,7 @@ router.post("/profile/image/change", checkUserIsAuthenticated, multerImageMiddle
 
 // Post & Home 
 router.post("/post/create", checkUserIsAuthenticated, multerPostMiddleware.array("media[]"), CreatePost);
+router.post('/post/update/:post_id', checkUserIsAuthenticated, multerPostMiddleware.array("media[]"), PostController.UpdatePost);
 router.get("/user/posts", checkUserIsAuthenticated, GetMyPosts);
 router.get("/user/reposts", checkUserIsAuthenticated, PostController.MyReposts);
 router.get("/user/reposts/:userid", checkUserIsAuthenticated, PostController.OtherReposts);
@@ -57,7 +58,7 @@ router.get("/profile/media/:userid", checkUserIsAuthenticated, GetUsersMedia);
 router.get("/user/:userid/posts", checkUserIsAuthenticated, GetUserPostByID);
 router.get("/posts/:post_id", GetCurrentUserPost);
 router.get("/editpost/:post_id", checkUserIsAuthenticated, PostController.EditPost);
-router.put('/post/:post_id', checkUserIsAuthenticated, PostController.UpdatePost);
+router.put('/post/:post_id', checkUserIsAuthenticated, PostController.UpdateUserPostAudience);
 router.post('/post/repost/:post_id', checkUserIsAuthenticated, PostController.CreateRepost);
 
 

@@ -117,6 +117,11 @@ const createUser = (
           subscription_type: "free",
         },
       },
+      ModelSubscriptionPack: {
+        create: {
+          subscription_id: generateUniqueId(),
+        }
+      }
     },
     include: {
       UserWallet: true,
