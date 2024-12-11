@@ -61,7 +61,6 @@ const serverSocket = (http) => {
                 socket.emit("conversations", conversations);
                 socket.to(userRoom).emit("conversations", receiverConversations);
             } else {
-
                 socket.emit("message-error", {
                     message: "An error occurred while saving the message",
                 });

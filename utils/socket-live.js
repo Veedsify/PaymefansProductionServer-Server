@@ -8,7 +8,7 @@ const SaveMessageToDb = require("../libs/save-message-db");
 // const LiveSocketFunctions = require('./socket/socket-live-functions');
 const { ADMIN_PANEL_URL, VERIFICATION_URL, APP_URL } = process.env;
 
-const LiveServerSocket = (http) => {
+const   LiveServerSocket = (http) => {
     const io = new Server(http, {
         cors: {
             origin: [VERIFICATION_URL, ADMIN_PANEL_URL, APP_URL],

@@ -39,7 +39,7 @@ class PostController {
       const { content, visibility } = req.body;
       let media = null;
       try {
-        media = await HandleMedia(files, validVideoMimetypes);
+        media = await HandleMedia(files, validVideoMimetypes, req);
       } catch (error) {
         console.error(`Error in HandleMedia: ${error.message}`);
       }

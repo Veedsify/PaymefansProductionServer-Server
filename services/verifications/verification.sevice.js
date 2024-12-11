@@ -38,7 +38,9 @@ class VerificationService {
                          message: 'Invalid document type'
                     }
                }
+
                const verificationFiles = [];
+
                const uploadFile = async (fileBuffer, fileType) => {
                     const fileId = `verification/${uuidv4()}`;
                     const params = {
@@ -58,7 +60,6 @@ class VerificationService {
 
                verificationFiles.push(frontUpload(), backUpload(), faceVerificationUpload());
                const [frontImage, backImage, faceVerificationVideo] = await Promise.all(verificationFiles);
-
                const videoframe = await getSingleFrameFromVideo (files.faceVideo[0].buffer);
                
                return {

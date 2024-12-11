@@ -94,6 +94,8 @@ const createUser = (
       username: `@${registerData.username}`,
       email: registerData.email,
       phone: registerData.phone,
+      profile_banner: `${process.env.SERVER_ORIGINAL_URL}/site/banner.png`,
+      profile_image: `${process.env.SERVER_ORIGINAL_URL}/site/avatar.png`,
       location: registerData.location,
       password: hashPass,
       UserWallet: {
@@ -120,8 +122,8 @@ const createUser = (
       ModelSubscriptionPack: {
         create: {
           subscription_id: generateUniqueId(),
-        }
-      }
+        },
+      },
     },
     include: {
       UserWallet: true,
@@ -183,6 +185,18 @@ const createNotification = async (userId, fullname) => {
 
 const CreateFollowing = async (userId, followingId) => {
   const uuid = generateUniqueId();
+
+  await prismaQuery.user.update({
+    where: {
+      id: userId,
+    },
+    data: {
+      total_followers: {
+        increment: 1
+      },
+    },
+  });
+
   return prismaQuery.follow.create({
     data: {
       user_id: userId,
