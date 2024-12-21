@@ -8,11 +8,11 @@ const multerImageMiddleware = require("../middlewares/multerImageMiddleware.midd
 const pointsController = require("../controllers/api/pointsController");
 const followerController = require("../controllers/api/followerController");
 const ConversationsController = require("../controllers/api/conversationsController");
-const { changePassword, setMessagePrice } = require("../controllers/api/settingsController");
+const {changePassword, setMessagePrice} = require("../controllers/api/settingsController");
 const uploadAttachmentMulterMiddleware = require("../middlewares/uploadAttachmentMulter.middleware");
 const multerPostMiddleware = require("../middlewares/multerPostMiddleware.middleware");
 const uploadMediaController = require("../controllers/api/mediaUploadController");
-const { GetTransactions, OtherTransactions } = require("../controllers/api/transactionsController");
+const {GetTransactions, OtherTransactions} = require("../controllers/api/transactionsController");
 const {
     CreatePost, GetMyPosts, GetCurrentUserPost, GetUserPostByID, GetMyMedia, GetUsersMedia
 } = require("../controllers/api/postController");
@@ -20,16 +20,17 @@ const checkEmailIsVerifiedMiddleware = require("../middlewares/checkEmailIsVerif
 const {
     GetSubscriptionData, checkSubscriber, CreateNewSubscription
 } = require("../controllers/api/subscriberController");
-const { addBank, GetBanks, DeleteBank } = require("../controllers/api/banksController");
-const { likePost } = require("../controllers/api/postInteractions");
-const { UploadStoryFiles, SaveStory, GetStories } = require('../controllers/api/storyController')
-const { NewPostComment, CommentsAttachMents } = require("../controllers/api/commentController");
+const {addBank, GetBanks, DeleteBank} = require("../controllers/api/banksController");
+const {likePost} = require("../controllers/api/postInteractions");
+const {UploadStoryFiles, SaveStory, GetStories} = require('../controllers/api/storyController')
+const {NewPostComment, CommentsAttachMents} = require("../controllers/api/commentController");
 const commentAttachmentMiddleware = require("../middlewares/commentAttachment.middleware");
 const createUploadHandler = require("../middlewares/storypost.middleware");
 const LiveStreamController = require("../controllers/api/livestreamController");
 const PostController = require("../controllers/api/postController");
-const { getMyNotifications, markNotificationAsRead } = require("../controllers/api/notificationController");
-const { ModelVerification } = require("../controllers/api/verificationController");
+const {getMyNotifications, markNotificationAsRead} = require("../controllers/api/notificationController");
+const {ModelVerification} = require("../controllers/api/verificationController");
+const SubscriptionTiersController = require("../controllers/api/subscriptionTiersController");
 
 // Authentication
 router.post("/auth/signup", authController.Register);
@@ -103,6 +104,11 @@ router.get("/wallet/transactions/other", checkUserIsAuthenticated, OtherTransact
 router.post("/subscriber/check", checkUserIsAuthenticated, checkSubscriber);
 router.post("/user/subscription-data/:userid", checkUserIsAuthenticated, GetSubscriptionData);
 router.post("/subscribe/subscription-to-user/:profileid", checkUserIsAuthenticated, CreateNewSubscription);
+
+// Subscribtion Tiers
+router.post('/create/subscription-tiers', checkUserIsAuthenticated, SubscriptionTiersController.CreateSubscriptionTier)
+router.get('/fetch/user/subscriptions/:user_id', checkUserIsAuthenticated, SubscriptionTiersController.FetchUserSubscription)
+
 
 // Followers
 router.post("/follow/check", checkUserIsAuthenticated, followerController.CheckFollower);

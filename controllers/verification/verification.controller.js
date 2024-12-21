@@ -3,7 +3,7 @@ const { ProcessVerification } = require("../../services/verifications/verificati
 class VerificationController {
 
      static async StartVerification(req, res) {
-          const processUserFaceverification = await ProcessVerification(req.body, req.files)
+          const processUserFaceverification = await ProcessVerification(req)
           if (processUserFaceverification.error) {
               return res.status(400).json({
                     status: false,

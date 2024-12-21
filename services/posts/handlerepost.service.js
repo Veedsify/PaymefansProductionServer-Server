@@ -5,11 +5,16 @@ const handleRepostService = async ({post_id, user}) => {
 
         const postId = post_id;
         const userId = user.id;
+        const audienceTypes = ['private', 'subscribers', 'followers']
 
         // Repost the post
         const getPost = await prismaQuery.post.findFirst({
             where: {
                 post_id: postId
+            },
+            select: {
+                post_audience: true,
+                id: true,
             }
         })
 
@@ -32,6 +37,28 @@ const handleRepostService = async ({post_id, user}) => {
             return {
                 error: true,
                 message: "You have already reposted this post"
+            }
+        }
+
+        const postAudience = getPost.post_audience
+        if (audienceTypes.includes(postAudience)) {
+            const isSubscriber = prismaQuery.post.findFirst({
+                where: {
+                    post_id: postId,
+                    user: {
+                        Subscribers: {
+                            some: {
+                                subscriber_id: userId,
+                            }
+                        }
+                    }
+                },
+            })
+            if (isSubscriber) {
+                return {
+                    error: true,
+                    message: "You are not a subscriber of this post, therefore you cannot repost it"
+                }
             }
         }
 

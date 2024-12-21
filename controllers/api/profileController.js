@@ -155,7 +155,7 @@ class profileController {
   }
 
   // Settings profile change
-  static async SettingsProfileChange(req, res) {
+  static async  SettingsProfileChange(req, res) {
     try {
       await updateProfileInfo(res, req);
     } catch (error) {

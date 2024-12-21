@@ -2,7 +2,7 @@ const prismaQuery = require("../utils/prisma");
 
 module.exports = async function getUserConversations(userId) {
     try {
-        console.log("userId", userId);
+        // console.log("userId", userId);
         const data = await prismaQuery.conversations.findMany({
             where: {
                 OR: [
@@ -37,7 +37,8 @@ module.exports = async function getUserConversations(userId) {
         if (data) {
             let conversations = [];
             for (let i = 0; i < data.length; i++) {
-                let participants = data[i].participants.find(user => user.user_1 === userId ? user.user_2 : user.user_1);
+                const allParticipants = data[i].participants;
+                let participants = allParticipants.find(user => user.user_1 === userId ? user.user_2 : user.user_1);
                 const receiver = participants.user_1 === userId ? participants.user_2 : participants.user_1;
 
                 const messagerReceiver = await prismaQuery.user.findFirst({
@@ -100,12 +101,12 @@ module.exports = async function getUserConversations(userId) {
                 return 0;
             });
 
-            return { conversations, status: true }
+            return {conversations, status: true}
         }
 
         prismaQuery.$disconnect();
     } catch (err) {
-        return { message: "An error occurred", status: false, err: err.message }
+        return {message: "An error occurred", status: false, err: err.message}
     }
 }
 

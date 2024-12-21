@@ -4,7 +4,7 @@ const tmp = require('tmp');  // Temporary file module
 
 
 const getSingleFrameFromVideo = async (videoBuffer) => {
-  
+
 };
 
 module.exports = getSingleFrameFromVideo;

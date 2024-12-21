@@ -121,7 +121,7 @@ model Model {
   verification_image  String?               @db.LongText
   verification_status Boolean               @default(false)
   verification_state  VerificationStateEnum @default(not_started)
-  token               String?               @db.LongText
+  token               String?               @unique @db.VarChar(255)
 
   user User @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
 
@@ -542,7 +542,7 @@ model ModelSubscriptionPack {
 
 model ModelSubscriptionTier {
   id               Int      @id @default(autoincrement())
-  subscription_id  Int 
+  subscription_id  Int
   tier_name        String
   tier_price       Float
   tier_description String
@@ -639,6 +639,58 @@ model UserBanks {
   @@index([user_id], map: "UserBanks_user_id_fkey")
 }
 
+// Products Models
+model ProductCategory {
+  id          Int       @id @default(autoincrement())
+  name        String
+  product     Product[]
+  description String?   @db.LongText
+  created_at  DateTime  @default(now())
+}
+
+model ProductSize {
+  id                 Int                @id @default(autoincrement())
+  name               String
+  description        String?            @db.LongText
+  product_size_links ProductSizePivot[]
+  created_at         DateTime           @default(now())
+}
+
+model Product {
+  id          Int     @id @default(autoincrement())
+  product_id  String  @unique
+  user_id     Int
+  name        String
+  description String? @db.LongText
+  price       Float
+  category_id Int
+  instock     Int
+
+  images   ProductImages[]
+  sizes    ProductSizePivot[]
+  category ProductCategory    @relation(fields: [category_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
+}
+
+model ProductSizePivot {
+  id         Int         @id @default(autoincrement())
+  product_id Int
+  size_id    Int
+  created_at DateTime    @default(now())
+  updated_at DateTime    @updatedAt
+  product    Product     @relation(fields: [product_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  size       ProductSize @relation(fields: [size_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
+}
+
+model ProductImages {
+  id         Int      @id @default(autoincrement())
+  product_id Int
+  image_url  String
+  product    Product  @relation(fields: [product_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+}
+
+// ENUMS DECLARATION
 enum UserRole {
   fan
   model
