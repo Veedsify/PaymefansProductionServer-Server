@@ -1,4 +1,5 @@
 const { PrismaClient } = require('@prisma/client')
+const {SERVER_ORIGINAL_URL} = process.env
 
 const prisma = new PrismaClient()
 const uniqueUserId = Math.random().toString(36).substring(2, 15);
@@ -16,6 +17,7 @@ async function main() {
             phone: "1234567890",
             location: "Nigeria",
             role: "admin",
+            profile_image: SERVER_ORIGINAL_URL + "/site/avatar.png",
             user_id: uniqueUserId,
             username: "@paymefans",
             UserWallet: {
