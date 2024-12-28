@@ -37,16 +37,24 @@ class PostController {
             const files = req.files;
             const user = req.user;
             const {content, visibility} = req.body;
-            let media = null;
+            console.log('content', content)
+            let media;
             try {
                 media = await HandleMedia(files, validVideoMimetypes, req);
             } catch (error) {
-                console.error(`Error in HandleMedia: ${error.message}`);
+                console.error(`Error in HandleMedia: ${JSON.stringify(error.message)}`);
             }
 
             if (!media) {
                 console.error("Failed to process media using both methods.");
+                res.status(500).json({
+                    status: false,
+                    message: "An error occurred while uploading your media",
+                    error: error,
+                });
             }
+
+            media = media || { images: [], videos: [] };
 
             // Continue with the rest of your logic
             const post = await prismaQuery.post.create({
@@ -62,41 +70,39 @@ class PostController {
                     UserMedia: {
                         createMany: {
                             data: [
-                                ...media.images.map((file) => {
-                                    console.log(file.response.result);
-                                    return {
-                                        media_id: file.response.result.image_id,
-                                        media_type: "image",
-                                        url: file.response.result.variants[0].trim(),
-                                        blur: file.response.result.variants[1].trim(),
-                                        poster: file.response.result.variants[0].trim(),
-                                        accessible_to: visibility,
-                                        locked: visibility === "subscribers" ? true : false,
-                                    };
-                                }),
-                                ...media.videos.map((video) => {
-                                    if (video.id) {
+                                ...(media?.images || []).map((file) => {
+                                    if (file && file.response && file.response.result) {
+                                        console.log(file.response.result);
                                         return {
-                                            media_id: video.id,
-                                            media_type: "video",
-                                            url: video.video_url,
-                                            blur: "",
-                                            poster: video.poster,
+                                            media_id: file.response.result.image_id,
+                                            media_type: "image",
+                                            url: file.response.result.variants[0]?.trim() || '',
+                                            blur: file.response.result.variants[1]?.trim() || '',
+                                            poster: file.response.result.variants[0]?.trim() || '',
                                             accessible_to: visibility,
-                                            locked: visibility === "subscribers" ? true : false,
+                                            locked: visibility === "subscribers",
                                         };
                                     } else {
-                                        return {
-                                            media_id: video.video_id,
-                                            media_type: "video",
-                                            url: video.video_url,
-                                            blur: "",
-                                            poster: video.poster,
-                                            accessible_to: visibility,
-                                            locked: visibility === "subscribers" ? true : false,
-                                        };
+                                        console.error('Invalid file response for image:', file);
+                                        return null;
                                     }
-                                }),
+                                }).filter(Boolean),
+                                ...(media?.videos || []).map((video) => {
+                                    if (video) {
+                                        return {
+                                            media_id: video.id || video.video_id,
+                                            media_type: "video",
+                                            url: video.video_url || '',
+                                            blur: video.blur || '',
+                                            poster: video.poster || '',
+                                            accessible_to: visibility,
+                                            locked: visibility === "subscribers",
+                                        };
+                                    } else {
+                                        console.error('Invalid video object:', video);
+                                        return null;
+                                    }
+                                }).filter(Boolean),
                             ],
                         },
                     },
