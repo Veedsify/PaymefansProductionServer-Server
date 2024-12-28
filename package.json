@@ -50,9 +50,9 @@
     "uuid": "^9.0.1"
   },
   "devDependencies": {
-    "@prisma/client": "^5.22.0",
+    "@prisma/client": "^6.1.0",
     "@types/node": "^22.10.1",
-    "prisma": "^5.22.0",
+    "prisma": "^6.1.0",
     "ts-node": "^10.9.2",
     "typescript": "^5.7.2"
   }
