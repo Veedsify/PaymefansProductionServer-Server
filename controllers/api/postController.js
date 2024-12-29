@@ -42,16 +42,11 @@ class PostController {
             try {
                 media = await HandleMedia(files, validVideoMimetypes, req);
             } catch (error) {
-                console.error(`Error in HandleMedia: ${JSON.stringify(error.message)}`);
+                throw new Error("Failed to process media using HandleMedia.");
             }
 
             if (!media) {
                 console.error("Failed to process media using both methods.");
-                res.status(500).json({
-                    status: false,
-                    message: "An error occurred while uploading your media",
-                    error: error,
-                });
             }
 
             media = media || { images: [], videos: [] };
