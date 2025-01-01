@@ -1,137 +1,72 @@
 const sharp = require("sharp");
-const {v4: uuidv4} = require("uuid");
+const { v4: uuidv4 } = require("uuid");
 const path = require("path");
-const {CLOUDFRONT_URL, SERVER_ORIGINAL_URL} = process.env;
+const { CLOUDFRONT_URL, SERVER_ORIGINAL_URL } = process.env;
 const uploadPostToS3Service = require("../services/posts/upload-post-to-s3.service");
 const {
-    uploadBufferCloudinary,
-    uploadLargeBufferCloudinary,
+  uploadBufferCloudinary,
+  uploadLargeBufferCloudinary,
 } = require("./cloudinary/upload-buffer-cloudinary");
-
-async function processImage(image, req) {
-    return {
-        response: {
-            result: {
-                image_id: uuidv4(),
-                variants: [
-                    await optimizeImage(image, req),
-                    await BlurImage(image, req),
-                ],
-            },
-        },
-    };
-}
-
-async function processVideo(video, req) {
-    const fileId = uuidv4();
-    const postVideo = await uploadLargeBufferCloudinary(
-        video.buffer,
-        {
-            streaming_profile: "auto",
-        },
-        "video",
-        fileId,
-        "posts/videos"
-    );
-
-    console.log(postVideo);
-
-    return {
-        video_id: uuidv4(),
-        video_url: postVideo.secure_url,
-        poster: postVideo.secure_url,
-    };
-}
-
-async function BlurImage(image, req) {
-    const imageId = uuidv4();
-    try {
-        const postImage = await uploadBufferCloudinary(
-            image.buffer,
-            {
-                width: 1000,
-                effect: "blur:2000",
-                // gravity: "adv_face", // REQSUBI
-            },
-            "image",
-            imageId,
-            "posts/blurs"
-        );
-
-        if (!postImage) {
-            throw new Error("Failed to upload image to Cloudinary");
-        }
-
-        return postImage.secure_url;
-    } catch (error) {
-        console.log(`Error optimizing image: ${error.message} `);
-    }
-}
-
-async function optimizeImage(image, req) {
-    const imageId = uuidv4();
-    try {
-        const postImage = await uploadBufferCloudinary(
-            image.buffer,
-            {
-                width: 1000,
-                // gravity: "adv_face", // REQSUBI
-            },
-            "image",
-            imageId,
-            "posts/uploads"
-        );
-
-        if (!postImage) {
-            throw new Error("Failed to upload image to Cloudinary");
-        }
-
-        return postImage.secure_url;
-    } catch (error) {
-        console.log(`Error optimizing image: ${error.message} `);
-    }
-}
+const processImage = require("./post_media/process-image");
+const processVideo = require("./post_media/process-video");
 
 async function HandleMedia(files, validVideoMimetypes, req) {
-    try {
-        let images = [];
-        let videos = [];
+  let images = [];
+  let videos = [];
 
-        if (!files || files.length === 0) {
-            return {
-                images: [],
-                videos: []
-            }
-        }
+  if (!files || files.length === 0) {
+    return {
+      images: [],
+      videos: [],
+    };
+  }
 
-        for (let file of files) {
-            if (validVideoMimetypes.includes(file.mimetype)) {
-                videos.push(file);
-            } else if (file.mimetype.includes("image")) {
-                images.push(file);
-            }
-        }
-
-        const imagePromises = images.map((image) => processImage(image, req));
-        const videoPromises = videos.map((video) => processVideo(video, req));
-        const processedImages = imagePromises.length > 0 ? await Promise.all(imagePromises) : null;
-        const processedVideos = videoPromises.length > 0 ? await Promise.all(videoPromises) : null;
-
-        if (!processedImages && !processedVideos) {
-            return {
-                images: [],
-                videos: []
-            };
-        }
-
-        return {
-            images: processedImages || [],
-            videos: processedVideos || [],
-        };
-    } catch (error) {
-        console.error(`Error processing media: ${error.message}`);
-        throw new Error(error)
+  for (let file of files) {
+    if (validVideoMimetypes.includes(file.mimetype)) {
+      videos.push(file);
+    } else if (file.mimetype.includes("image")) {
+      images.push(file);
     }
+  }
+
+  // Process images and videos in parallel
+  const imagePromises = images.map((image) => processImage(image, req));
+  const videoPromises = videos.map((video) => processVideo(video, req));
+
+  // Wait for all processing to finish
+  const [processedImages, processedVideos] = await Promise.all([
+    Promise.all(imagePromises),
+    Promise.all(videoPromises),
+  ]);
+
+  // Check for errors in both image and video processing
+  const getErrorsIfAny = [...processedImages, ...processedVideos].filter(
+    (media) => media.error,
+  );
+
+  if (getErrorsIfAny.length > 0) {
+    // Log the first error
+    console.log(
+      `Error processing all medias: ${JSON.stringify(getErrorsIfAny)}`,
+    );
+    getErrorsIfAny.forEach((error) =>
+      console.log(`Error while processing: ${error.code}`),
+    );
+
+    // Return early if there are errors
+    return {
+      error: true,
+      code: getErrorsIfAny[0].code,
+    };
+  }
+
+  // If no errors, return processed media
+
+  return {
+    error: false,
+    images: processedImages || [],
+    videos: processedVideos || [],
+  };
 }
 
 module.exports = HandleMedia;
