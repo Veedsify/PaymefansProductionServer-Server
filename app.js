@@ -17,11 +17,12 @@ const http = require("http").createServer(app);
 const htt2 = require("http").createServer(app2);
 const serverSocket = require("./utils/socket");
 const LiveServerSocket = require("./utils/socket-live");
-const { ADMIN_PANEL_URL, VERIFICATION_URL, APP_URL } = process.env;
+const { ADMIN_PANEL_URL, VERIFICATION_URL, APP_URL, LIVESTREAM_PORT } =
+  process.env;
 
 app.use(
   cors({
-    origin: [VERIFICATION_URL, ADMIN_PANEL_URL, APP_URL],
+    origin: [VERIFICATION_URL, ADMIN_PANEL_URL, APP_URL, LIVESTREAM_PORT],
     credentials: true,
     optionsSuccessStatus: 200,
   })
@@ -45,7 +46,7 @@ app.use(express.static(path.join(__dirname, "public")));
 // Shared Data For Server 2
 app2.use(
   cors({
-    origin: [VERIFICATION_URL, ADMIN_PANEL_URL, APP_URL],
+    origin: [VERIFICATION_URL, ADMIN_PANEL_URL, APP_URL, LIVESTREAM_PORT],
     credentials: true,
     optionsSuccessStatus: 200,
   })
@@ -71,7 +72,7 @@ app2.use("/", require("./routes/liverouter"));
 
 // Socket
 serverSocket(http);
-LiveServerSocket(http);
+LiveServerSocket(htt2);
 
 //Routes
 app.use("/", indexRouter);
@@ -83,7 +84,6 @@ app.use("/verification", verificationRouter);
 app.use(function (req, res, next) {
   next(createError(404));
 });
-
 
 // error handler
 app.use(function (err, req, res, next) {
@@ -99,8 +99,9 @@ htt2.listen(process.env.LIVESTREAM_PORT, () => {
   console.log(`Listening on port ${process.env.LIVESTREAM_PORT}`);
 });
 
-
-http.listen(process.env.PORT, () => {});
+http.listen(process.env.PORT, () => {
+  console.log(`Listening on port ${process.env.PORT}`);
+});
 http.on("error", onError);
 http.on("listening", onListening);
 function onError(error) {

@@ -4,13 +4,13 @@ const getUserConversations = require("../libs/get-user-conversations");
 const {checkUserFollowing, followUser} = require("../libs/check-user-following");
 const SaveMessageToDb = require("../libs/save-message-db");
 const redis = require("../libs/redis-store");
-const {ADMIN_PANEL_URL, VERIFICATION_URL, APP_URL} = process.env;
+const {ADMIN_PANEL_URL, VERIFICATION_URL, APP_URL, LIVESTREAM_PORT} = process.env;
 
 
 const serverSocket = (http) => {
     const io = new Server(http, {
         cors: {
-            origin: [VERIFICATION_URL, ADMIN_PANEL_URL, APP_URL],
+            origin: [VERIFICATION_URL, ADMIN_PANEL_URL, LIVESTREAM_PORT, APP_URL],
             methods: ["GET", "POST"],
         },
     });

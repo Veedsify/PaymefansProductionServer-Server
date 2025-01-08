@@ -313,6 +313,7 @@ model LiveStream {
   LiveStreamComment LiveStreamComment[]
   LiveStreamLike    LiveStreamLike[]
   ReportLive        ReportLive[]
+  LiveStreamView    LiveStreamView[]
 
   @@index([user_id], map: "LiveStream_user_id_fkey")
 }
@@ -359,12 +360,13 @@ model LiveStreamLike {
 }
 
 model LiveStreamView {
-  id         Int      @id @default(autoincrement())
+  id         Int        @id @default(autoincrement())
   user_id    Int
-  live_id    String
-  created_at DateTime @default(now())
-  updated_at DateTime @updatedAt
-  user       User     @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  live_id    Int
+  created_at DateTime   @default(now())
+  updated_at DateTime   @updatedAt
+  live       LiveStream @relation(fields: [live_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  user User @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
 
   @@index([user_id], map: "LiveStreamView_user_id_fkey")
 }
