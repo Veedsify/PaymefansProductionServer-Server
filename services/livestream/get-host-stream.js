@@ -1,3 +1,4 @@
+const axios = require('axios');
 const prismaQuery = require("../../utils/prisma");
 
 module.exports = async function getHostStream(stream_id, req) {
@@ -78,11 +79,25 @@ module.exports = async function getHostStream(stream_id, req) {
                stream = { user_id: user.user_id, ...invitee }
           }
 
-          if(!stream) {
+          if (!stream) {
                return { error: true, message: "Stream not found" };
           }
 
-          return { error: false, data: stream };
+          const MEETING_ID = 'bbb41076-4cf0-4186-bd5e-8c9fc4696cfc'
+          const url = process.env.DYTE_BASE_URL + `/meetings/${MEETING_ID}/participants`
+          const response = await axios.post(url, {
+               "name": "Mary Sue",
+               "picture": "https://i.imgur.com/test.jpg",
+               "preset_name": "group_call_host",
+               "custom_participant_id": Math.random().toString(36).substring(7)
+          }, {
+               headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Basic ${btoa(process.env.DYTE_ORGANIZATION_ID + ':' + process.env.DYTE_API_KEY)}`,
+               }
+          })
+
+          return { error: false, data: { ...stream, authToken: response.data.data.token} };
      }
      catch (error) {
           return { error: true, message: error.message };
