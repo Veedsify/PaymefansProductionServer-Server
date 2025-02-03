@@ -70,7 +70,7 @@ class authController {
         const signinUser = await loginService(req.body);
 
         if (signinUser.error) {
-            return res.status(200).json({ message: signinUser.error, status: false });
+            return res.status(200).json({ message: signinUser.message, status: false });
         }
 
         req.session.user = signinUser.user;

@@ -100,6 +100,7 @@ class subscriberController {
     static async CreateNewSubscription(req, res) {
         try {
             const profileid = req.params.profileid;
+            const {tier_id} = req.body;
             const user = prismaQuery.user.findFirst({
                 where: {
                     id: req.user.id
@@ -122,6 +123,18 @@ class subscriberController {
                 select: {
                     id: true,
                     user_id: true,
+                    ModelSubscriptionPack: {
+                        select: {
+                            ModelSubscriptionTier: {
+                                where: {
+                                    id: tier_id
+                                },
+                                select: {
+                                    tier_price: true
+                                }
+                            }
+                        }
+                    },
                     Settings: {
                         select: {
                             subscription_price: true,
@@ -139,9 +152,6 @@ class subscriberController {
             if (!userdata) {
                 return res.status(404).json({status: false, message: "User not found"});
             }
-            if (!user) {
-                return res.status(404).json({status: false, message: "User not found"});
-            }
 
             const checkSubscription = await prismaQuery.subscribers.findFirst({
                 where: {
@@ -154,7 +164,7 @@ class subscriberController {
                 return res.status(200).json({status: false, message: "You are already subscribed to this user"});
             }
 
-            if (profileData.Settings.subscription_price > userdata.UserPoints.points) {
+            if (profileData.ModelSubscriptionPack.ModelSubscriptionTier.tier_price > userdata.UserPoints.points) {
                 return res.status(200).json({
                     status: false,
                     message: "You don't have enough points to subscribe to this user"
@@ -181,7 +191,7 @@ class subscriberController {
                     UserPoints: {
                         update: {
                             points: {
-                                increment: -profileData.Settings.subscription_price
+                                decrement: profileData.ModelSubscriptionPack.ModelSubscriptionTier.tier_price
                             }
                         }
                     }
@@ -196,7 +206,7 @@ class subscriberController {
                     UserPoints: {
                         update: {
                             points: {
-                                increment: profileData.Settings.subscription_price
+                                increment: profileData?.ModelSubscriptionPack.ModelSubscriptionTier.tier_price
                             }
                         }
                     }

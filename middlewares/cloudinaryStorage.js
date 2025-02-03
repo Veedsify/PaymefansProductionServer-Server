@@ -1,5 +1,4 @@
 const { cloudinary } = require("../utils/cloudinary");
-const { CloudinaryStorage } = require("multer-storage-cloudinary");
 const multer = require("multer");
 
 // Define file type checker

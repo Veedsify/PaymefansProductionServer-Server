@@ -47,6 +47,7 @@ const {
 const {
   NewPostComment,
   CommentsAttachMents,
+  NewCommentLike,
 } = require("../controllers/api/commentController");
 const commentAttachmentMiddleware = require("../middlewares/commentAttachment.middleware");
 const createUploadHandler = require("../middlewares/storypost.middleware");
@@ -66,11 +67,13 @@ const {
   uploadToCloudinary,
 } = require("../middlewares/cloudinaryStorage");
 const StoreController = require("../controllers/api/storeController");
+const HelpController = require("../controllers/api/HelpController");
+const HomeFeedController = require("../controllers/api/homeFeedController");
 
 // Authentication
 router.post("/auth/signup", authController.Register);
 router.post("/auth/signup/username", authController.Username);
-router.post("/auth/login", authController.Login);
+router.post("/auth/login", authController.Login); 
 router.post("/auth/points", checkUserIsAuthenticated, authController.Points);
 router.post("/auth/wallet", checkUserIsAuthenticated, authController.Wallet);
 router.get("/retrieve", checkUserIsAuthenticated, authController.Retrieve);
@@ -79,6 +82,13 @@ router.post(
   checkUserIsAuthenticated,
   authController.CheckEmail,
 );
+
+// FEEDS
+router.get("/home/posts", checkUserIsAuthenticated, HomeFeedController.GetHomePosts);
+
+
+
+
 
 // Profile
 router.post("/profile/user", profileController.Profile);
@@ -135,6 +145,11 @@ router.post(
   "/post/repost/:post_id",
   checkUserIsAuthenticated,
   PostController.CreateRepost,
+);
+router.get(
+  "/post/:post_id/comments",
+  checkUserIsAuthenticated,
+  PostController.GetPostComments,
 );
 
 // Post Interactions
@@ -294,6 +309,8 @@ router.post(
   NewPostComment,
 );
 
+router.post("/comment/like", checkUserIsAuthenticated, NewCommentLike);
+
 // Notifications
 router.post(
   "/notifications/:page",
@@ -340,10 +357,10 @@ router.post(
 router.post("/meta-map/verification", authController.MetaMapVerification);
 router.post("/verification", checkUserIsAuthenticated, ModelVerification);
 
-
-
-// Store Controller 
-
+// Store Controller
 router.get("/store/products", StoreController.GetProducts);
 router.get("/store/product/:product_id", StoreController.GetSingleProduct);
 module.exports = router;
+
+//Help Controllers
+router.get("/help-categories", HelpController.GetHelpCategories);

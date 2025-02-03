@@ -10,6 +10,7 @@ const {
 const {
   handleRepostService,
 } = require("../../services/posts/handlerepost.service");
+const GetPostCommentService = require("../../services/posts/post-comments.service");
 const { SERVER_ORIGINAL_URL, CLOUDFLARE_ACCOUNT_ID, CLOUDFLARE_CUSTOMER_CODE } =
   process.env;
 require("dotenv").config();
@@ -128,13 +129,13 @@ class PostController {
         message: "Post created successfully",
         data: post,
       });
-      
+
     } catch (error) {
-    //   res.status(500).json({
-    //     status: false,
-    //     message: "An error occurred while creating post",
-    //     error: error,
-    //   });
+      //   res.status(500).json({
+      //     status: false,
+      //     message: "An error occurred while creating post",
+      //     error: error,
+      //   });
       console.log(error);
     }
   }
@@ -533,27 +534,27 @@ class PostController {
           repost_id: true,
           user_id: true,
           repost_username: true,
-          PostComment: {
-            orderBy: {
-              created_at: "desc",
-            },
-            select: {
-              id: true,
-              comment: true,
-              created_at: true,
-              comment_id: true,
-              user: {
-                select: {
-                  id: true,
-                  user_id: true,
-                  username: true,
-                  profile_image: true,
-                  name: true,
-                },
-              },
-              PostCommentAttachments: true,
-            },
-          },
+          // PostComment: {
+          //   orderBy: {
+          //     created_at: "desc",
+          //   },
+          //   select: {
+          //     id: true,
+          //     comment: true,
+          //     created_at: true,
+          //     comment_id: true,
+          //     user: {
+          //       select: {
+          //         id: true,
+          //         user_id: true,
+          //         username: true,
+          //         profile_image: true,
+          //         name: true,
+          //       },
+          //     },
+          //     PostCommentAttachments: true,
+          //   },
+          // },
         },
       });
       if (!post || post.length === 0) {
@@ -953,6 +954,36 @@ class PostController {
         error: error,
       });
       console.log(error);
+    }
+  }
+
+  static async GetPostComments(req, res) {
+    try {
+      const postId = req.params.post_id;
+
+      if (!postId) {
+        return res.status(500).json({
+          status: false,
+          message: `No Post Id`
+        })
+      }
+
+      const fetchPostComments = await GetPostCommentService().allComments(postId)
+
+      if (fetchPostComments.error) {
+        res.status(500).json({
+          status: false,
+          message: "An error occurred while updating post",
+        })
+      }
+
+      res.status(200).json({
+        status: true,
+        message: "Comments retrieved successfully",
+        data: fetchPostComments.data
+      })
+    } catch (err) {
+
     }
   }
 }

@@ -2,13 +2,18 @@ const passwordHasher = require("../utils/passwordHasher");
 const bcrypt = require("bcrypt");
 const jwt = require("../utils/jsonwebtoken");
 const prismaQuery = require("../utils/prisma");
+const { error } = require("console");
 
-module.exports = async ({ data }) => {
+module.exports = async (data) => {
 
-  const { email = null, password: userpassword = null } = data;
+  if (!data) return { error: true, message: "Invalid request", status: false };
+
+  const email = data.email;
+  const userpassword = data.password;
+
 
   if (!email || !userpassword) {
-    return { error: "Email and password are required", status: false };
+    return { error: true, message: "Email and password are required", status: false };
   }
 
   const user = await prismaQuery.user.findFirst({
@@ -18,13 +23,15 @@ module.exports = async ({ data }) => {
   });
 
   if (!user) {
-    return { error: "Invalid email or password", status: false };
+    return { error: true, message: "Invalid email or password", status: false };
   }
 
-  const match = bcrypt.compare(userpassword, user.password);
+  const match = await bcrypt.compare(userpassword, user.password);
+
+  console.log(match)
 
   if (!match) {
-    return { error: "Invalid email or password", status: false };
+    return { error: true, message: "Invalid email or password", status: false };
   }
 
   const { password, ...rest } = user;

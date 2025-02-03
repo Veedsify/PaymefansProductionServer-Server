@@ -4,6 +4,8 @@ const prismaQuery = require("../../utils/prisma")
 const { v4: uuid } = require("uuid")
 const s3 = require("../../libs/s3")
 const { PutObjectCommand } = require("@aws-sdk/client-s3")
+const { uploadBufferCloudinary } = require("../../utils/cloudinary/upload-buffer-cloudinary")
+const CommentLikesService = require("../../services/comments/commentLikes.service")
 require('dotenv').config()
 
 class CommentController {
@@ -34,33 +36,29 @@ class CommentController {
                 }
             })
 
-            async function uploadToS3() {
+            async function uploadToCloudinary() {
                 if (files) {
                     const uploadPromises = files.map(async (element) => {
-                        const commentId = `comments/${uuid()}`;
-                        const buffer = await sharp(element.buffer).resize(700).webp().toBuffer(); // Await the buffer
-                        const params = {
-                            Bucket: process.env.S3_BUCKET_NAME,
-                            Key: commentId,
-                            Body: buffer,
-                            ContentType: element.mimetype,
-                        };
-                        const command = new PutObjectCommand(params);
-                        await s3.send(command);
-                        return commentId;
+                        const file = element
+                        const fileBuffer = await sharp(file.buffer).resize({ width: 800 }).toBuffer()
+                        const transformations = {
+                            quality: "auto",
+                        }
+                        const upload = await uploadBufferCloudinary(fileBuffer, transformations, "image", file.filename, "comments")
+                        return upload.secure_url
                     });
                     return Promise.all(uploadPromises); // Return all promises
                 }
             }
 
             if (files) {
-                const commentAttachments = await uploadToS3()
+                const commentAttachments = await uploadToCloudinary()
                 await prismaQuery.postCommentAttachments.createMany({
                     data: commentAttachments.map((attachment) => {
                         return {
                             comment_id: newComment.id,
                             name: attachment,
-                            path: `${process.env.CLOUDFRONT_URL}${attachment}`.trim(),
+                            path: `${attachment}`,
                             type: "image",
                         };
                     })
@@ -135,6 +133,25 @@ class CommentController {
                 message: 'An error occured while uploading attachment'
             })
         }
+    }
+
+    // New Comment Like
+    static async NewCommentLike(req, res) {
+        const { id } = req.user
+        const { commentId } = req.body
+
+        const commentLike = await CommentLikesService().create(commentId, id)
+        if (commentLike.error) {
+            return res.status(500).json({
+                status: false,
+                message: 'An error occured while liking comment'
+            })
+        }
+
+        res.json({
+            status: true,
+            message: commentLike.message
+        })
     }
 }
 

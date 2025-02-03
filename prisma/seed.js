@@ -1,10 +1,12 @@
 const { PrismaClient } = require('@prisma/client')
-const {SERVER_ORIGINAL_URL} = process.env
+const hashPassword = require('../utils/passwordHasher')
+const { SERVER_ORIGINAL_URL } = process.env
 
 const prisma = new PrismaClient()
 const uniqueUserId = Math.random().toString(36).substring(2, 15);
 
 async function main() {
+    const password = await hashPassword("password")
     const alice = await prisma.user.upsert({
         where: { email: 'admin@paymefans.com' },
         update: {},
@@ -12,7 +14,7 @@ async function main() {
             email: 'admin@paymefans.com',
             fullname: "Paymefans",
             name: "Paymefans",
-            password: "admin",
+            password,
             admin: true,
             phone: "1234567890",
             location: "Nigeria",

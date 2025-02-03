@@ -17,23 +17,25 @@ const GetUserStoriesService = async (userId) => {
     let userIdsToFetch = [];
 
     // Step 2: Check following count
-    if (following.length > 15) {
-      userIdsToFetch = following.slice(0, 15).map((u) => u.id);
+    if (following.length > 30) {
+      userIdsToFetch = following.slice(0, 30).map((u) => u.follower_id);
     } else {
       userIdsToFetch = [
-        ...following.map((u) => u.id),
-        ...subscribers.map((u) => u.id),
+        ...following.map((u) => u.follower_id),
+        ...subscribers.map((u) => u.subscriber_id),
       ];
       // Remove duplicates and ensure we have up to 15 users
-      userIdsToFetch = Array.from(new Set(userIdsToFetch)).slice(0, 15);
+      userIdsToFetch = Array.from(new Set(userIdsToFetch)).slice(0, 30);
     }
 
+    userIdsToFetch.unshift(userId);
+
     // Step 3: Fallback for no following
-    if (userIdsToFetch.length === 0) {
+    if (userIdsToFetch.length >= 1) {
       const randomStories = await prismaQuery.userStory.findMany({
         where: {
           created_at: {
-            gte: new Date(new Date().setDate(new Date().getDate() - 1)),
+            gte: new Date(new Date().setHours(0, 0, 0, 0) - 24 * 60 * 60 * 1000),
           },
         },
         take: 15,
@@ -80,9 +82,9 @@ const GetUserStoriesService = async (userId) => {
     // Step 4: Get stories from the selected users
     const stories = await prismaQuery.userStory.findMany({
       where: {
-        userId: { in: userIdsToFetch },
+        user_id: { in: userIdsToFetch },
         created_at: {
-          gte: new Date(new Date().setDate(new Date().getDate() - 1)),
+          gte: new Date(new Date().setHours(0, 0, 0, 0) - 24 * 60 * 60 * 1000),
         },
       },
       include: {
