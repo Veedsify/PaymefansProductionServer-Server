@@ -496,6 +496,9 @@ class PostController {
               post_audience: "public",
             },
             {
+              post_audience: "private",
+            },
+            {
               post_audience: "subscribers",
             },
           ],
@@ -503,10 +506,12 @@ class PostController {
         select: {
           user: {
             select: {
+              id: true,
               username: true,
               profile_image: true,
               created_at: true,
               name: true,
+              is_model: true,
               user_id: true,
               Subscribers: {
                 select: {
@@ -557,6 +562,16 @@ class PostController {
           // },
         },
       });
+
+      if (!post || !req.user || (post.post_audience === "private" && post.user?.id !== req.user.id)) {
+        return res.status(404).json({
+          status: false,
+          others: { post, user: req.user },
+          message: "Post not found private",
+        });
+      }
+
+
       if (!post || post.length === 0) {
         return res.status(404).json({
           status: false,
@@ -757,6 +772,7 @@ class PostController {
         });
       }
 
+
       const userReposts = await prismaQuery.userRepost.findMany({
         where: {
           user_id: user.id,
@@ -816,16 +832,21 @@ class PostController {
         skip: (validPage - 1) * validLimit,
         take: validLimit,
         orderBy: {
-          created_at: "desc",
+          id: "desc",
         },
       });
+
+      const reposts = userReposts.map((repost) => repost.post)
+
+      console.log(reposts)
 
       return res.status(200).json({
         status: true,
         message: "Reposts retrieved successfully",
-        data: userReposts.map((repost) => repost.post),
+        data: reposts,
         total: userRepostCount,
       });
+
     } catch (error) {
       res.status(500).json({
         status: false,
@@ -924,14 +945,16 @@ class PostController {
         skip: (validPage - 1) * validLimit,
         take: validLimit,
         orderBy: {
-          created_at: "desc",
+          id: "desc",
         },
       });
+
+      const reposts = userReposts.map((repost) => repost.post)
 
       return res.status(200).json({
         status: true,
         message: "Reposts retrieved successfully",
-        data: userReposts.map((repost) => repost.post),
+        data: reposts,
         total: userRepostCount,
       });
     } catch (error) {

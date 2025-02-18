@@ -75,6 +75,7 @@ model User {
   Cart                      Cart[]
   HelpContact               HelpContact[]
   PostCommentLikes          PostCommentLikes[]
+  PointConversionRateUsers  PointConversionRateUsers[]
 }
 
 model Participants {
@@ -506,6 +507,21 @@ model UserPoints {
   updated_at         DateTime             @updatedAt
   user               User                 @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
   UserPointsPurchase UserPointsPurchase[]
+}
+
+model PointConversionRateUsers {
+  id                    Int                  @id @default(autoincrement())
+  user                  User                 @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  user_id               Int
+  PointConversionRate   PointConversionRate? @relation(fields: [pointConversionRateId], references: [id])
+  pointConversionRateId Int?
+}
+
+model PointConversionRate {
+  id                       Int                        @id @default(autoincrement())
+  amount                   Int?
+  points                   Int?
+  pointConversionRateUsers PointConversionRateUsers[]
 }
 
 model UserWallet {

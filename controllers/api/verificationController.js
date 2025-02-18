@@ -1,4 +1,4 @@
-const STARTMODELVERIFICATIONSERVICE = require("../../services/verifications/startmodelverification.service");
+const Startmodelverificationservice = require("../../services/verifications/startmodelverification.service");
 
 class VerificationController {
 
@@ -7,7 +7,7 @@ class VerificationController {
           try {
                switch (action) {
                     case "start":
-                         const startVerification = await STARTMODELVERIFICATIONSERVICE(req.body, req);
+                         const startVerification = await Startmodelverificationservice(req.body, req);
                          if (startVerification.error) {
                               return res.status(500).json({ error: true, message: startVerification.message });
                          }

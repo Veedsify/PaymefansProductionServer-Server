@@ -119,6 +119,7 @@ class authController {
                     }
                 }
             });
+            
 
             const following = await prismaQuery.user.count({
                 where: {
