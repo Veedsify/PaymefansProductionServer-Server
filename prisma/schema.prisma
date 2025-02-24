@@ -76,6 +76,8 @@ model User {
   HelpContact               HelpContact[]
   PostCommentLikes          PostCommentLikes[]
   PointConversionRateUsers  PointConversionRateUsers[]
+  GroupParticipants         GroupParticipants[]
+  BlockedGroupParticipant   BlockedGroupParticipant[]
 }
 
 model Participants {
@@ -199,7 +201,7 @@ model Post {
   repost_username String?       @default("")
   repost_id       String?       @default("")
   user_id         Int
-  content         String        @db.LongText
+  content         String?       @db.LongText
   media           Json?
   post_status     String
   post_audience   PostAudience
@@ -823,6 +825,47 @@ model FAQAnswers {
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
   FAQ        FAQ      @relation(fields: [faq_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
+}
+
+model GroupParticipants {
+  id         Int      @id @default(autoincrement())
+  user_id    Int
+  group_id   Int
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+  user       User     @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  group      Groups   @relation(fields: [group_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
+}
+
+model Groups {
+  id                      Int                       @id @default(autoincrement())
+  group_id                String                    @db.Char(255)
+  created_at              DateTime                  @default(now())
+  updated_at              DateTime                  @updatedAt
+  partitcipants           GroupParticipants[]
+  BlockedGroupParticipant BlockedGroupParticipant[]
+  GroupSettings           GroupSettings?
+}
+
+model GroupSettings {
+  id          Int      @id @default(autoincrement())
+  group_id    Int      @unique
+  name        String
+  description String   @db.LongText
+  group_icon  String
+  created_at  DateTime @default(now())
+  updated_at  DateTime @updatedAt
+  group       Groups    @relation(fields: [group_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
+}
+
+model BlockedGroupParticipant {
+  id         Int      @id @default(autoincrement())
+  user_id    Int
+  group_id   Int
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+  user       User     @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  group      Groups    @relation(fields: [group_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
 }
 
 // ENUMS DECLARATION

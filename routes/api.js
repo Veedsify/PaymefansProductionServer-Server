@@ -90,6 +90,7 @@ router.get("/home/posts", checkUserIsAuthenticated, HomeFeedController.GetHomePo
 
 // Profile
 router.post("/profile/user", profileController.Profile);
+
 router.post(
     "/profile/banner/change",
     checkUserIsAuthenticated,
@@ -272,7 +273,7 @@ router.post(
 router.post(
     "/create/subscription-tiers",
     checkUserIsAuthenticated,
-    SubscriptionTiersController.CreateSubscriptionTier,
+    SubscriptionTiersController.CreateSubscriptionTier
 );
 router.get(
     "/fetch/user/subscriptions/:user_id",

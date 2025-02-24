@@ -22,7 +22,7 @@ const { ADMIN_PANEL_URL, VERIFICATION_URL, APP_URL, LIVESTREAM_PORT } =
 
 app.use(
   cors({
-    origin: [VERIFICATION_URL, ADMIN_PANEL_URL, APP_URL, LIVESTREAM_PORT],
+    origin: [VERIFICATION_URL, ADMIN_PANEL_URL, APP_URL, LIVESTREAM_PORT, "http://localhost:5173"],
     credentials: true,
     optionsSuccessStatus: 200,
   })
