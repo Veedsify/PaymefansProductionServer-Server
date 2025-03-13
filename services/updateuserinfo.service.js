@@ -1,6 +1,6 @@
 const prismaQuery = require("../utils/prisma");
 
-module.exports = async ({ name, location, bio, website, email }, req) => {
+module.exports = async ({ name, location, bio, website, email, username }, req) => {
   try {
     const checkEmail = await prismaQuery.user.findUnique({
       where: {
@@ -18,6 +18,7 @@ module.exports = async ({ name, location, bio, website, email }, req) => {
         name: name,
         location: location,
         bio: bio,
+        username: username,
         email: email,
         website: website,
       },

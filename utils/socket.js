@@ -1,4 +1,4 @@
-const { Server } = require("socket.io");
+// const { Server } = require("socket.io");
 const messagesSeenByReceiver = require("../libs/messages-seen-by-receiver");
 const getUserConversations = require("../libs/get-user-conversations");
 const {
@@ -7,24 +7,21 @@ const {
 } = require("../libs/check-user-following");
 const SaveMessageToDb = require("../libs/save-message-db");
 const redis = require("../libs/redis-store");
-const { ADMIN_PANEL_URL, VERIFICATION_URL, APP_URL, LIVESTREAM_PORT } = process.env;
+// const { ADMIN_PANEL_URL, VERIFICATION_URL, APP_URL, LIVESTREAM_PORT } = process.env;
 
-const { createClient } = require("redis");
-const { createAdapter } = require("@socket.io/redis-adapter");
-const pubClient = createClient({ url: "redis://localhost:6379" });
-const subClient = pubClient.duplicate();
+// const { createClient } = require("redis");
+// const { createAdapter } = require("@socket.io/redis-adapter");
+// const pubClient = createClient({ url: "redis://localhost:6379" });
+// const subClient = pubClient.duplicate();
+const socketServer = require('../libs/io');
 
+let appSocket;
 const serverSocket = async (http) => {
-  await Promise.all([pubClient.connect(), subClient.connect()]);
-  const io = new Server(http, {
-    cors: {
-      origin: [VERIFICATION_URL, ADMIN_PANEL_URL, LIVESTREAM_PORT, APP_URL],
-      methods: ["GET", "POST"],
-    },
-    adapter: createAdapter(pubClient, subClient),
-  });
+
+  const io = await socketServer.init(http)
 
   io.on("connection", (socket) => {
+    appSocket = socket;
     let userRoom = "";
     let user = {};
 
@@ -167,6 +164,11 @@ const serverSocket = async (http) => {
       emitActiveUsers();
     };
 
+    const joinUploadRoom = (data) => {
+      socket.join(data);
+      console.log("User joined upload room", data);
+    }
+
     socket.on("user-connected", handleUserConnected);
     socket.on("join", handleJoinRoom);
     socket.on("new-message", handleMessage);
@@ -175,6 +177,7 @@ const serverSocket = async (http) => {
     socket.on("user_active", handleUserActive);
     socket.on("checkUserIsFollowing", checkFollowing);
     socket.on("followUser", followThisUser);
+    socket.on("join-upload-room", joinUploadRoom)
     // socket.on("inactive", handleUserInactive);
 
     socket.on("disconnect", async () => {
@@ -188,4 +191,4 @@ const serverSocket = async (http) => {
   return io;
 };
 
-module.exports = serverSocket;
+module.exports = { serverSocket, appSocket };

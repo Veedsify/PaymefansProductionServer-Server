@@ -2,7 +2,7 @@ const { exec } = require('child_process');
 const fs = require('fs');
 const { v4: uuid } = require('uuid');
 const path = require('path');
-const tusOploader = require('./tus');
+const tusOploader = require('./cloudflare/tus');
 const homeDir = path.join(__dirname, '..');
 
 const processPostMedia = async (files, req, validVideoMimetypes, SERVER_ORIGINAL_URL, apiToken) => {

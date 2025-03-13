@@ -60,6 +60,7 @@ class FeedService {
     const posts = await prismaQuery.post.findMany({
       where: {
         post_is_visible: true,
+        post_status: "approved",
         OR: [
           { post_audience: "public" },
           {

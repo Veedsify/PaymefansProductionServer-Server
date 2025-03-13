@@ -1,16 +1,11 @@
-const { PassThrough } = require("stream");
 
 async function UploadImageCloudflare(image, req) {
     try {
         const UPLOAD_IMAGE = process.env.CLOUDFLARE_IMAGE_UPLOAD;
         const ACCOUNT_HASH = process.env.CLOUDFLARE_ACCOUNT_HASH;
-
-        const stream = new PassThrough();  // Create a stream
-        stream.end(image.buffer);  // Stream the buffer instead of storing it
-
         const formData = new FormData();
-        formData.append("file", stream, image.originalname);
-
+        const blob = new Blob([image.buffer]);
+        formData.append("file", blob, image.originalname);
         const response = await fetch(UPLOAD_IMAGE, {
             method: "POST",
             headers: {
@@ -18,14 +13,21 @@ async function UploadImageCloudflare(image, req) {
             },
             body: formData  // Streaming formData
         });
-
         const uploadedImage = await response.json();
+        if(!uploadedImage.success) {
+            return {
+                error: true,
+                message: uploadedImage.errors[0].message
+            };
+        }
+
         return {
             public: `https://imagedelivery.net/${ACCOUNT_HASH}/${uploadedImage.result.id}/public`,
-            blur: `https://imagedelivery.net/${ACCOUNT_HASH}/${uploadedImage.result.id}/blurred`,
+            blur: `https://imagedelivery.net/${ACCOUNT_HASH}/${uploadedImage.result.id}/blured`,
             id: uploadedImage.result.id
         };
     } catch (err) {
+        console.error(err);
         return {
             error: true,
             message: err.message

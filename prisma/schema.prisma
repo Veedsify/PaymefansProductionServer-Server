@@ -137,18 +137,20 @@ model Model {
 }
 
 model UserMedia {
-  id            Int      @id @default(autoincrement())
-  media_id      String
+  id            Int        @id @default(autoincrement())
+  media_id      String     @unique
   post_id       Int
   media_type    String
-  url           String   @db.LongText
-  blur          String   @db.LongText
-  poster        String   @db.LongText
-  locked        Boolean  @default(false)
+  media_state   MediaState @default(processing)
+  duration      String?    @default("")
+  url           String     @db.LongText
+  blur          String     @db.LongText
+  poster        String     @db.LongText
+  locked        Boolean    @default(false)
   accessible_to String
-  created_at    DateTime @default(now())
-  updated_at    DateTime @updatedAt
-  post          Post     @relation(fields: [post_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  created_at    DateTime   @default(now())
+  updated_at    DateTime   @updatedAt
+  post          Post       @relation(fields: [post_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
 
   @@index([post_id], map: "UserMedia_user_id_fkey")
 }
@@ -203,7 +205,7 @@ model Post {
   user_id         Int
   content         String?       @db.LongText
   media           Json?
-  post_status     String
+  post_status     PostStatus    @default(pending)
   post_audience   PostAudience
   post_is_visible Boolean       @default(true)
   post_likes      Int           @default(0)
@@ -855,7 +857,7 @@ model GroupSettings {
   group_icon  String
   created_at  DateTime @default(now())
   updated_at  DateTime @updatedAt
-  group       Groups    @relation(fields: [group_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  group       Groups   @relation(fields: [group_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
 }
 
 model BlockedGroupParticipant {
@@ -865,7 +867,7 @@ model BlockedGroupParticipant {
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
   user       User     @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  group      Groups    @relation(fields: [group_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  group      Groups   @relation(fields: [group_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
 }
 
 // ENUMS DECLARATION
@@ -887,8 +889,15 @@ enum UserRole {
 enum PostAudience {
   public
   private
+  price
   followers
   subscribers
+}
+
+enum PostStatus {
+  pending
+  approved
+  rejected
 }
 
 enum TransactionType {
@@ -914,4 +923,9 @@ enum VerificationStateEnum {
   pending
   approved
   rejected
+}
+
+enum MediaState {
+  processing
+  completed
 }

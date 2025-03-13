@@ -69,6 +69,9 @@ const {
 const StoreController = require("../controllers/api/storeController");
 const HelpController = require("../controllers/api/HelpController");
 const HomeFeedController = require("../controllers/api/homeFeedController");
+const uploadFileMiddleware = require("../middlewares/upload-file.middleware");
+const UploadController = require("../controllers/api/uploadController");
+const WebhookController = require("../controllers/api/webhook.controller");
 
 // Authentication
 router.post("/auth/signup", authController.Register);
@@ -107,6 +110,8 @@ router.post(
 // router.post("/profile/settings/update/password", checkUserIsAuthenticated, profileController.SettingsPasswordChange);
 
 // Post & Home
+router.post("/post/upload-post-media", checkUserIsAuthenticated, uploadFileMiddleware.single("file"), UploadController.uploadImage);
+
 router.post(
     "/post/create",
     checkUserIsAuthenticated,
@@ -383,3 +388,7 @@ module.exports = router;
 
 //Help Controllers
 router.get("/help-categories", HelpController.GetHelpCategories);
+
+
+// ProcessMediaControllers 
+router.post("/webhooks/cloudflare/processed-post-media", WebhookController.ProcessedMedia)

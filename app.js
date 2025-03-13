@@ -15,24 +15,25 @@ var app2 = express();
 var debug = require("debug")("express-server:server");
 const http = require("http").createServer(app);
 const htt2 = require("http").createServer(app2);
-const serverSocket = require("./utils/socket");
+const { serverSocket } = require("./utils/socket");
 const LiveServerSocket = require("./utils/socket-live");
+const { RegisterStreamWebhook } = require("./utils/webhooks/register-webhook");
 const { ADMIN_PANEL_URL, VERIFICATION_URL, APP_URL, LIVESTREAM_PORT } =
-  process.env;
+    process.env;
 
 app.use(
-  cors({
-    origin: [VERIFICATION_URL, ADMIN_PANEL_URL, APP_URL, LIVESTREAM_PORT, "http://localhost:5173"],
-    credentials: true,
-    optionsSuccessStatus: 200,
-  })
+    cors({
+        origin: [VERIFICATION_URL, ADMIN_PANEL_URL, APP_URL, LIVESTREAM_PORT, "http://localhost:5173"],
+        credentials: true,
+        optionsSuccessStatus: 200,
+    })
 );
 app.use(
-  session({
-    secret: SESSION_SECRET,
-    resave: true,
-    saveUninitialized: false,
-  })
+    session({
+        secret: SESSION_SECRET,
+        resave: true,
+        saveUninitialized: false,
+    })
 );
 // view engine setup
 app.set("views", path.join(__dirname, "views"));
@@ -45,18 +46,18 @@ app.use(express.static(path.join(__dirname, "public")));
 
 // Shared Data For Server 2
 app2.use(
-  cors({
-    origin: [VERIFICATION_URL, ADMIN_PANEL_URL, APP_URL, LIVESTREAM_PORT],
-    credentials: true,
-    optionsSuccessStatus: 200,
-  })
+    cors({
+        origin: [VERIFICATION_URL, ADMIN_PANEL_URL, APP_URL, LIVESTREAM_PORT],
+        credentials: true,
+        optionsSuccessStatus: 200,
+    })
 );
 app2.use(
-  session({
-    secret: SESSION_SECRET,
-    resave: true,
-    saveUninitialized: false,
-  })
+    session({
+        secret: SESSION_SECRET,
+        resave: true,
+        saveUninitialized: false,
+    })
 );
 // view engine setup
 app2.set("views", path.join(__dirname, "views"));
@@ -71,8 +72,16 @@ app2.use(express.static(path.join(__dirname, "public")));
 app2.use("/", require("./routes/liverouter"));
 
 // Socket
-serverSocket(http);
+serverSocket(http).then(() => {
+    return
+});
 LiveServerSocket(htt2);
+
+// Register Webhooks
+
+RegisterStreamWebhook().then(() => {
+    return
+});
 
 //Routes
 app.use("/", indexRouter);
@@ -81,55 +90,58 @@ app.use("/admin", adminRouter);
 app.use("/verification", verificationRouter);
 
 // catch 404 and forward to error handler`
-app.use(function (req, res, next) {
-  next(createError(404));
+app.use(function(req, res, next) {
+    next(createError(404));
 });
 
 // error handler
-app.use(function (err, req, res, next) {
-  // set locals, only providing error in development
-  res.locals.message = err.message;
-  res.locals.error = req.app.get("env") === "development" ? err : {};
-  // render the error page
-  res.status(err.status || 500);
-  res.render("error");
+app.use(function(err, req, res, next) {
+    // set locals, only providing error in development
+    res.locals.message = err.message;
+    res.locals.error = req.app.get("env") === "development" ? err : {};
+    // render the error page
+    res.status(err.status || 500);
+    res.render("error");
 });
 
 htt2.listen(process.env.LIVESTREAM_PORT, () => {
-  console.log(`Listening on port ${process.env.LIVESTREAM_PORT}`);
+    console.log(`Listening on port ${process.env.LIVESTREAM_PORT}`);
 });
 
 http.listen(process.env.PORT, () => {
-  console.log(`Listening on port ${process.env.PORT}`);
+    console.log(`Listening on port ${process.env.PORT}`);
 });
 http.on("error", onError);
 http.on("listening", onListening);
+
 function onError(error) {
-  if (error.syscall !== "listen") {
-    throw error;
-  }
-  const port = process.env.PORT;
-  var bind = typeof port === "string" ? "Pipe " + port : "Port " + port;
-  // handle specific listen errors with friendly messages
-  switch (error.code) {
-    case "EACCES":
-      console.error(bind + " requires elevated privileges");
-      process.exit(1);
-      break;
-    case "EADDRINUSE":
-      console.error(bind + " is already in use");
-      process.exit(1);
-      break;
-    default:
-      throw error;
-  }
+    if (error.syscall !== "listen") {
+        throw error;
+    }
+    const port = process.env.PORT;
+    var bind = typeof port === "string" ? "Pipe " + port : "Port " + port;
+    // handle specific listen errors with friendly messages
+    switch (error.code) {
+        case "EACCES":
+            console.error(bind + " requires elevated privileges");
+            process.exit(1);
+            break;
+        case "EADDRINUSE":
+            console.error(bind + " is already in use");
+            process.exit(1);
+            break;
+        default:
+            throw error;
+    }
 }
+
 /**
  * Event listener for HTTP server "listening" event.
  */
 function onListening() {
-  var addr = http.address();
-  var bind = typeof addr === "string" ? "pipe " + addr : "port " + addr.port;
-  debug("Listening on " + bind);
+    var addr = http.address();
+    var bind = typeof addr === "string" ? "pipe " + addr : "port " + addr.port;
+    debug("Listening on " + bind);
 }
-// module.exports = app;
+
+module.exports = http

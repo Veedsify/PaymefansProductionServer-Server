@@ -9,7 +9,7 @@ const handleRepostService = async ({ post_id, user }) => {
         const getPost = await prismaQuery.post.findFirst({
             where: {
                 post_id: postId,
-                post_status: "published"
+                post_status: "approved"
             },
             select: {
                 post_audience: true,
@@ -27,19 +27,6 @@ const handleRepostService = async ({ post_id, user }) => {
                 message: "Post not found"
             }
         }
-        // Check if the post is already reposted by the user
-        // const isRepost = await prismaQuery.userRepost.findFirst({
-        //     where: {
-        //         post_id: getPost.id,
-        //         user_id: userId
-        //     }
-        // })
-        // if (isRepost) {
-        //     return {
-        //         error: true,
-        //         message: "You have already reposted this post"
-        //     }
-        // }
         const postAudience = getPost.post_audience
         if (audienceTypes.includes(postAudience)) {
             const isSubscriber = prismaQuery.post.findFirst({

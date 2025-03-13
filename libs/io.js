@@ -1,7 +1,7 @@
 // socketManager.js
 let io;
 const {createAdapter} = require("@socket.io/redis-adapter");
-const redis = require("../../../server/libs/redis-store");
+const redis = require("./redis-store");
 const {createClient} = require("redis");
 const {ADMIN_PANEL_URL, VERIFICATION_URL, APP_URL, LIVESTREAM_PORT} = process.env;
 const pubClient = createClient({url: "redis://localhost:6379"});

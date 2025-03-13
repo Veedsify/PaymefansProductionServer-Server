@@ -11,6 +11,7 @@ const {
   handleRepostService,
 } = require("../../services/posts/handlerepost.service");
 const GetPostCommentService = require("../../services/posts/post-comments.service");
+const { default: removeCloudflareMedia } = require("../../utils/cloudflare/remove-cloudflare-media");
 const { SERVER_ORIGINAL_URL, CLOUDFLARE_ACCOUNT_ID, CLOUDFLARE_CUSTOMER_CODE } =
   process.env;
 require("dotenv").config();
@@ -19,26 +20,19 @@ class PostController {
   // Create a new post with media attached
   static async CreatePost(req, res) {
     try {
-      const validVideoMimetypes = [
-        "video/mp4",
-        "video/quicktime",
-        "video/3gpp",
-        "video/x-msvideo",
-        "video/x-ms-wmv",
-        "video/x-flv",
-        "video/webm",
-        "video/x-matroska",
-        "video/avi",
-        "video/mpeg",
-        "video/ogg",
-        "video/x-ms-asf",
-        "video/x-m4v",
-      ];
       const postId = uuid();
-      const files = req.files;
       const user = req.user;
-      const { content, visibility } = req.body;
-
+      const { content, visibility, media, removedMedia } = req.body;
+      if (removedMedia) {
+        const removeMedia = await removeCloudflareMedia(removedMedia)
+        if (removeMedia.error) {
+          res.status(500).json({
+            status: false,
+            message: "An error occurred while deleting media",
+            error: removeMedia.error,
+          });
+        }
+      }
       if ((!content || content.trim().length === 0) && !visibility) {
         return res.status(400).json({
           status: false,
@@ -46,79 +40,36 @@ class PostController {
         });
       }
 
-      let media = await HandleMedia(files, validVideoMimetypes, req);
-
-      const mapCodeWithMessage = {
-        400: "Video is too large to process synchronously",
-        413: "Some Of The Files You Tried To Upload are Larger Than Your Allowed File Size",
-        499: "This is not your fault, it's ours. Please try again",
-      };
-
-      if (media.error) {
-        res.status(500).json({
-          status: false,
-          message:
-            mapCodeWithMessage[media.code] ||
-            "An error occurred while creating post",
-          error: media.error,
-        });
-        return
-      }
-
-      media = media || { images: [], videos: [] };
-
       // Continue with the rest of your logic
       const post = await prismaQuery.post.create({
         data: {
           post_id: postId,
           was_repost: false,
-          content: content,
+          content: content ? content : "",
           post_audience: visibility,
-          post_status: "published",
+          post_status: "pending",
           post_is_visible: true,
           user_id: user.id,
           media: [],
           UserMedia: {
             createMany: {
-              data: [
-                ...(media?.images || [])
-                  .map((file) => {
-                    if (file && file.response && file.response.result) {
-                      console.log(file.response.result);
-                      return {
-                        media_id: file.response.result.image_id,
-                        media_type: "image",
-                        url: file.response.result.variants[0]?.trim() || "",
-                        blur: file.response.result.variants[1]?.trim() || "",
-                        poster: file.response.result.variants[0]?.trim() || "",
-                        accessible_to: visibility,
-                        locked: visibility === "subscribers",
-                      };
-                    } else {
-                      console.error("Invalid file response for image:", file);
-                      return null;
-                    }
-                  })
-                  .filter(Boolean),
-                ...(media?.videos || [])
-                  .map((video) => {
-                    if (video) {
-                      return {
-                        media_id: video.id || video.video_id,
-                        media_type: "video",
-                        url: video.video_url || "",
-                        blur: video.blur || "",
-                        poster: video.poster || "",
-                        accessible_to: visibility,
-                        locked: visibility === "subscribers",
-                      };
-                    } else {
-                      console.error("Invalid video object:", video);
-                      return null;
-                    }
-                  })
-                  .filter(Boolean),
-              ],
+              data: media.map((file) => {
+                if (file && file.id) {
+                  return {
+                    media_id: file.id,
+                    media_type: file.type,
+                    url: file.public,
+                    media_state: file.type.includes("image") ? "completed" : "processing",
+                    blur: file.blur,
+                    poster: file.public,
+                    accessible_to: visibility,
+                    locked: visibility === "subscribers",
+                  };
+                } else {
+                  console.error("Invalid file response:", file);
+                  return null;
+                }
+              }).filter(Boolean)
             },
           },
         },
@@ -131,11 +82,11 @@ class PostController {
       });
 
     } catch (error) {
-      //   res.status(500).json({
-      //     status: false,
-      //     message: "An error occurred while creating post",
-      //     error: error,
-      //   });
+      res.status(500).json({
+        status: false,
+        message: "An error occurred while creating post",
+        error: error,
+      });
       console.log(error);
     }
   }
@@ -227,6 +178,7 @@ class PostController {
               accessible_to: "subscribers",
             },
           ],
+          media_state: "completed",
           OR: [...postCount.map((post) => ({ post_id: post.id }))],
         },
       });
@@ -236,6 +188,7 @@ class PostController {
           NOT: {
             accessible_to: "private",
           },
+          media_state: "completed",
           OR: [...postCount.map((post) => ({ post_id: post.id }))],
         },
         select: {
@@ -243,6 +196,7 @@ class PostController {
           media_id: true,
           post_id: true,
           poster: true,
+          media_state: true,
           url: true,
           blur: true,
           media_type: true,
@@ -326,6 +280,7 @@ class PostController {
               id: true,
               media_id: true,
               post_id: true,
+              media_state: true,
               poster: true,
               url: true,
               blur: true,
@@ -347,6 +302,7 @@ class PostController {
               username: true,
               profile_image: true,
               name: true,
+              is_model: true,
               user_id: true,
               Subscribers: {
                 select: {
@@ -397,7 +353,7 @@ class PostController {
       const postCount = await prismaQuery.post.count({
         where: {
           user_id: userid,
-          post_status: "published",
+          post_status: "approved",
           NOT: {
             post_audience: "private",
           },
@@ -407,7 +363,7 @@ class PostController {
       const posts = await prismaQuery.post.findMany({
         where: {
           user_id: userid,
-          post_status: "published",
+          post_status: "approved",
           NOT: {
             post_audience: "private",
           },
@@ -433,6 +389,7 @@ class PostController {
               poster: true,
               url: true,
               blur: true,
+              media_state: true,
               media_type: true,
               locked: true,
               accessible_to: true,
@@ -452,6 +409,7 @@ class PostController {
               profile_image: true,
               name: true,
               user_id: true,
+              is_model: true,
               Subscribers: {
                 select: {
                   subscriber_id: true,
@@ -490,7 +448,7 @@ class PostController {
       const post = await prismaQuery.post.findFirst({
         where: {
           post_id: post_id,
-          post_status: "published",
+          post_status: "approved",
           OR: [
             {
               post_audience: "public",
@@ -614,11 +572,37 @@ class PostController {
         });
       }
 
+      const postMedia = await prismaQuery.userMedia.findMany({
+        where: {
+          post_id: post.id,
+        }
+      })
+
+      if (postMedia.length > 0) {
+        const media = postMedia.map((media) => ({
+          id: media.media_id,
+          type: media.media_type
+        }))
+        console.log("Media", media)
+        if (media && media.length > 0) {
+          const removeMedia = await removeCloudflareMedia(media)
+          if (removeMedia.error) {
+            res.status(500).json({
+              status: false,
+              message: "An error occurred while deleting media",
+              error: removeMedia.error,
+            });
+            return
+          }
+        }
+      }
+
       await prismaQuery.post.delete({
         where: {
           id: post.id,
         },
       });
+
 
       return res.status(200).json({
         status: true,
@@ -670,7 +654,7 @@ class PostController {
       const post = await prismaQuery.post.findFirst({
         where: {
           post_id: post_id,
-          post_status: "published",
+          post_status: "approved",
         },
         select: {
           // user: {
@@ -798,6 +782,7 @@ class PostController {
                   media_id: true,
                   post_id: true,
                   poster: true,
+                  media_state: true,
                   url: true,
                   blur: true,
                   media_type: true,
@@ -837,8 +822,6 @@ class PostController {
       });
 
       const reposts = userReposts.map((repost) => repost.post)
-
-      console.log(reposts)
 
       return res.status(200).json({
         status: true,
@@ -910,6 +893,7 @@ class PostController {
                   id: true,
                   media_id: true,
                   post_id: true,
+                  media_state: true,
                   poster: true,
                   url: true,
                   blur: true,
