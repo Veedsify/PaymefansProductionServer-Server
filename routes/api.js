@@ -118,6 +118,7 @@ router.post(
     multerPostMiddleware.array("media[]"),
     CreatePost,
 );
+
 router.post(
     "/post/update/:post_id",
     checkUserIsAuthenticated,
