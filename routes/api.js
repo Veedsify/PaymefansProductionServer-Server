@@ -166,6 +166,45 @@ router.delete(
     PostController.DeletePost,
 );
 
+
+/**
+ * 
+ * 
+ * POINTS
+ * 
+ *
+ */
+// Route To Buy Points
+// Route To Get Points For a User
+router.post(
+    "/user/get-points",
+    checkUserIsAuthenticated,
+    PointsController.GetUserPoints,
+);
+router.post(
+    "/points/buy",
+    checkUserIsAuthenticated,
+    PointsController.BuyPoints,
+);
+// Route To Get Conversion Rate For Points
+router.post("/point/rate", checkUserIsAuthenticated, PointsController.ConversionRate)
+
+router.post('/points/purchase', checkUserIsAuthenticated, PointsController.PointPurcahse)
+
+// Fallback Route After Payment
+router.get("/points/callback", PointsController.Callback);
+
+
+// Route To Get Global Points
+router.get("/global/points", PointsController.GetGlobalPoints);
+
+// Route To Get Price Per Message For a User
+router.post(
+    "/price-per-message",
+    checkUserIsAuthenticated,
+    PointsController.GetPointPerMessage,
+);
+
 // Settngs and Configs
 router.post(
     "/profile/settings/update",
@@ -207,43 +246,6 @@ router.post(
 );
 router.get("/callback/model/signup", modelController.ValidateModelPayment);
 
-/**
- * 
- * 
- * POINTS
- * 
- *
- */
-// Route To Buy Points
-router.post(
-    "/points/buy",
-    checkUserIsAuthenticated,
-    PointsController.BuyPoints,
-);
-// Route To Get Conversion Rate For Points
-router.post("/point/rate", checkUserIsAuthenticated, PointsController.ConversionRate)
-
-router.post('/points/purchase', checkUserIsAuthenticated, PointsController.PointPurcahse)
-
-// Fallback Route After Payment
-router.get("/points/callback", PointsController.Callback);
-
-// Route To Get Points For a User
-router.post(
-    "/user/get-points",
-    checkUserIsAuthenticated,
-    PointsController.GetUserPoints,
-);
-
-// Route To Get Global Points
-router.get("/global/points", PointsController.GetGlobalPoints);
-
-// Route To Get Price Per Message For a User
-router.post(
-    "/price-per-message",
-    checkUserIsAuthenticated,
-    PointsController.GetPointPerMessage,
-);
 
 // Wallet & Transactions & Banks
 router.put("/banks/add", checkUserIsAuthenticated, addBank);
@@ -385,7 +387,6 @@ router.post("/verification", checkUserIsAuthenticated, ModelVerification);
 // Store Controller
 router.get("/store/products", StoreController.GetProducts);
 router.get("/store/product/:product_id", StoreController.GetSingleProduct);
-module.exports = router;
 
 //Help Controllers
 router.get("/help-categories", HelpController.GetHelpCategories);
@@ -393,3 +394,4 @@ router.get("/help-categories", HelpController.GetHelpCategories);
 
 // ProcessMediaControllers 
 router.post("/webhooks/cloudflare/processed-post-media", WebhookController.ProcessedMedia)
+module.exports = router;

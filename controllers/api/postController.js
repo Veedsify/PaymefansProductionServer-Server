@@ -15,7 +15,6 @@ const { default: removeCloudflareMedia } = require("../../utils/cloudflare/remov
 const { SERVER_ORIGINAL_URL, CLOUDFLARE_ACCOUNT_ID, CLOUDFLARE_CUSTOMER_CODE } =
   process.env;
 require("dotenv").config();
-
 class PostController {
   // Create a new post with media attached
   static async CreatePost(req, res) {
@@ -39,7 +38,6 @@ class PostController {
           message: "Content and visibility are required",
         });
       }
-
       // Continue with the rest of your logic
       const post = await prismaQuery.post.create({
         data: {
@@ -74,13 +72,11 @@ class PostController {
           },
         },
       });
-
       return res.status(200).json({
         status: true,
         message: "Post created successfully",
         data: post,
       });
-
     } catch (error) {
       res.status(500).json({
         status: false,
@@ -90,7 +86,6 @@ class PostController {
       console.log(error);
     }
   }
-
   // Get all media attached to a post for the current user
   static async GetMyMedia(req, res) {
     try {
@@ -100,24 +95,20 @@ class PostController {
       const parsedLimit = limit ? parseInt(limit, 10) : 6;
       const validLimit =
         Number.isNaN(parsedLimit) || parsedLimit <= 0 ? 5 : parsedLimit;
-
       // Parse page to an integer or default to 1 if not provided
       const parsedPage = page ? parseInt(page, 10) : 1;
       const validPage =
         Number.isNaN(parsedPage) || parsedPage <= 0 ? 1 : parsedPage;
-
       const postCount = await prismaQuery.post.findMany({
         where: {
           user_id: user.id,
         },
       });
-
       const mediaCount = await prismaQuery.userMedia.count({
         where: {
           OR: [...postCount.map((post) => ({ post_id: post.id }))],
         },
       });
-
       const media = await prismaQuery.userMedia.findMany({
         where: {
           OR: [...postCount.map((post) => ({ post_id: post.id }))],
@@ -128,7 +119,6 @@ class PostController {
           created_at: "desc",
         },
       });
-
       return res.status(200).json({
         status: true,
         message: "Media retrieved successfully",
@@ -141,11 +131,9 @@ class PostController {
         message: "An error occurred while retrieving media",
         error: error,
       });
-
       console.log(error);
     }
   }
-
   // Get all media attached to a post for the current user profile page
   static async GetUsersMedia(req, res) {
     try {
@@ -156,18 +144,15 @@ class PostController {
       const parsedLimit = limit ? parseInt(limit, 10) : 6;
       const validLimit =
         Number.isNaN(parsedLimit) || parsedLimit <= 0 ? 5 : parsedLimit;
-
       // Parse page to an integer or default to 1 if not provided
       const parsedPage = page ? parseInt(page, 10) : 1;
       const validPage =
         Number.isNaN(parsedPage) || parsedPage <= 0 ? 1 : parsedPage;
-
       const postCount = await prismaQuery.post.findMany({
         where: {
           user_id: userid,
         },
       });
-
       const mediaCount = await prismaQuery.userMedia.count({
         where: {
           AND: [
@@ -182,7 +167,6 @@ class PostController {
           OR: [...postCount.map((post) => ({ post_id: post.id }))],
         },
       });
-
       const media = await prismaQuery.userMedia.findMany({
         where: {
           NOT: {
@@ -218,7 +202,6 @@ class PostController {
           created_at: "desc",
         },
       });
-
       return res.status(200).json({
         status: true,
         message: "Media retrieved successfully",
@@ -231,33 +214,27 @@ class PostController {
         message: "An error occurred while retrieving media",
         error: error,
       });
-
       console.log(error);
     }
   }
-
   // Get all posts for the current user
   static async GetMyPosts(req, res) {
     try {
       const user = req.user;
       const { page, limit } = req.query;
-
       // Parse limit to an integer or default to 5 if not provided
       const parsedLimit = limit ? parseInt(limit, 10) : 5;
       const validLimit =
         Number.isNaN(parsedLimit) || parsedLimit <= 0 ? 5 : parsedLimit;
-
       // Parse page to an integer or default to 1 if not provided
       const parsedPage = page ? parseInt(page, 10) : 1;
       const validPage =
         Number.isNaN(parsedPage) || parsedPage <= 0 ? 1 : parsedPage;
-
       const postCount = await prismaQuery.post.count({
         where: {
           user_id: user.id,
         },
       });
-
       const posts = await prismaQuery.post.findMany({
         where: {
           user_id: user.id,
@@ -318,7 +295,6 @@ class PostController {
           created_at: "desc",
         },
       });
-
       return res.status(200).json({
         status: true,
         message: "Posts retrieved successfully",
@@ -334,7 +310,6 @@ class PostController {
       console.log(error);
     }
   }
-
   // Get all posts for a user by their ID
   static async GetUserPostByID(req, res) {
     try {
@@ -344,12 +319,10 @@ class PostController {
       const parsedLimit = limit ? parseInt(limit, 10) : 5;
       const validLimit =
         Number.isNaN(parsedLimit) || parsedLimit <= 0 ? 5 : parsedLimit;
-
       // Parse page to an integer or default to 1 if not provided
       const parsedPage = page ? parseInt(page, 10) : 1;
       const validPage =
         Number.isNaN(parsedPage) || parsedPage <= 0 ? 1 : parsedPage;
-
       const postCount = await prismaQuery.post.count({
         where: {
           user_id: userid,
@@ -359,7 +332,6 @@ class PostController {
           },
         },
       });
-
       const posts = await prismaQuery.post.findMany({
         where: {
           user_id: userid,
@@ -424,7 +396,6 @@ class PostController {
         skip: (validPage - 1) * validLimit,
         take: validLimit,
       });
-
       return res.status(200).json({
         status: true,
         message: "Posts retrieved successfully",
@@ -440,7 +411,6 @@ class PostController {
       console.log(error);
     }
   }
-
   // Get a single post by its ID
   static async GetCurrentUserPost(req, res) {
     try {
@@ -520,7 +490,6 @@ class PostController {
           // },
         },
       });
-
       if (!post || !req.user || (post.post_audience === "private" && post.user?.id !== req.user.id)) {
         return res.status(404).json({
           status: false,
@@ -528,15 +497,12 @@ class PostController {
           message: "Post not found private",
         });
       }
-
-
       if (!post || post.length === 0) {
         return res.status(404).json({
           status: false,
           message: "Post not found",
         });
       }
-
       return res.status(200).json({
         status: true,
         message: "Post retrieved successfully",
@@ -551,33 +517,28 @@ class PostController {
       console.log(error);
     }
   }
-
   // Delete a post by its ID
   static async DeletePost(req, res) {
     try {
       const { post_id } = req.params;
       const user = req.user;
-
       const post = await prismaQuery.post.findFirst({
         where: {
           post_id: post_id,
           user_id: user.id,
         },
       });
-
       if (!post) {
         return res.status(404).json({
           status: false,
           message: "Post not found",
         });
       }
-
       const postMedia = await prismaQuery.userMedia.findMany({
         where: {
           post_id: post.id,
         }
       })
-
       if (postMedia.length > 0) {
         const media = postMedia.map((media) => ({
           id: media.media_id,
@@ -596,14 +557,11 @@ class PostController {
           }
         }
       }
-
       await prismaQuery.post.delete({
         where: {
           id: post.id,
         },
       });
-
-
       return res.status(200).json({
         status: true,
         message: "Post deleted successfully",
@@ -617,23 +575,19 @@ class PostController {
       console.log(error);
     }
   }
-
   // Update Post Audience
   static async UpdateUserPostAudience(req, res) {
     const { id } = req.user;
     const { post_id } = req.params;
     const { visibility } = req.body;
-
     try {
       const update = await UpdatePostAudience(id, post_id, visibility);
-
       if (update.error) {
         return res.status(400).json({
           status: false,
           message: update.message,
         });
       }
-
       return res.status(200).json({
         status: true,
         message: update.message,
@@ -646,7 +600,6 @@ class PostController {
       });
     }
   }
-
   // Edit POst
   static async EditPost(req, res) {
     try {
@@ -693,7 +646,6 @@ class PostController {
           message: "Post not found",
         });
       }
-
       return res.status(200).json({
         status: true,
         message: "Post retrieved successfully",
@@ -708,26 +660,22 @@ class PostController {
       console.log(error);
     }
   }
-
   static async CreateRepost(req, res) {
     const handleRepost = await handleRepostService({
       post_id: req.params.post_id,
       user: req.user,
     });
-
     if (handleRepost.error) {
       return res.status(400).json({
         status: false,
         message: handleRepost.message,
       });
     }
-
     return res.status(200).json({
       status: true,
       message: handleRepost.message,
     });
   }
-
   static async MyReposts(req, res) {
     try {
       const user = req.user;
@@ -736,18 +684,15 @@ class PostController {
       const parsedLimit = limit ? parseInt(limit, 10) : 5;
       const validLimit =
         Number.isNaN(parsedLimit) || parsedLimit <= 0 ? 5 : parsedLimit;
-
       // Parse page to an integer or default to 1 if not provided
       const parsedPage = page ? parseInt(page, 10) : 1;
       const validPage =
         Number.isNaN(parsedPage) || parsedPage <= 0 ? 1 : parsedPage;
-
       const userRepostCount = await prismaQuery.userRepost.count({
         where: {
           user_id: user.id,
         },
       });
-
       if (userRepostCount === 0) {
         return res.status(200).json({
           status: false,
@@ -755,8 +700,6 @@ class PostController {
           message: "No reposts found",
         });
       }
-
-
       const userReposts = await prismaQuery.userRepost.findMany({
         where: {
           user_id: user.id,
@@ -820,16 +763,13 @@ class PostController {
           id: "desc",
         },
       });
-
       const reposts = userReposts.map((repost) => repost.post)
-
       return res.status(200).json({
         status: true,
         message: "Reposts retrieved successfully",
         data: reposts,
         total: userRepostCount,
       });
-
     } catch (error) {
       res.status(500).json({
         status: false,
@@ -839,7 +779,6 @@ class PostController {
       console.log(error);
     }
   }
-
   static async OtherReposts(req, res) {
     try {
       const { userid } = req.params;
@@ -848,18 +787,15 @@ class PostController {
       const parsedLimit = limit ? parseInt(limit, 10) : 5;
       const validLimit =
         Number.isNaN(parsedLimit) || parsedLimit <= 0 ? 5 : parsedLimit;
-
       // Parse page to an integer or default to 1 if not provided
       const parsedPage = page ? parseInt(page, 10) : 1;
       const validPage =
         Number.isNaN(parsedPage) || parsedPage <= 0 ? 1 : parsedPage;
-
       const userRepostCount = await prismaQuery.userRepost.count({
         where: {
           user_id: Number(userid),
         },
       });
-
       if (userRepostCount === 0) {
         return res.status(200).json({
           status: true,
@@ -868,7 +804,6 @@ class PostController {
           total: 0,
         });
       }
-
       const userReposts = await prismaQuery.userRepost.findMany({
         where: {
           user_id: Number(userid),
@@ -932,9 +867,7 @@ class PostController {
           id: "desc",
         },
       });
-
       const reposts = userReposts.map((repost) => repost.post)
-
       return res.status(200).json({
         status: true,
         message: "Reposts retrieved successfully",
@@ -950,7 +883,6 @@ class PostController {
       console.log(error);
     }
   }
-
   // Update Posts
   static async UpdatePost(req, res) {
     try {
@@ -963,36 +895,29 @@ class PostController {
       console.log(error);
     }
   }
-
   static async GetPostComments(req, res) {
     try {
       const postId = req.params.post_id;
-
       if (!postId) {
         return res.status(500).json({
           status: false,
           message: `No Post Id`
         })
       }
-
       const fetchPostComments = await GetPostCommentService().allComments(postId)
-
       if (fetchPostComments.error) {
         res.status(500).json({
           status: false,
           message: "An error occurred while updating post",
         })
       }
-
       res.status(200).json({
         status: true,
         message: "Comments retrieved successfully",
         data: fetchPostComments.data
       })
     } catch (err) {
-
     }
   }
 }
-
 module.exports = PostController;
