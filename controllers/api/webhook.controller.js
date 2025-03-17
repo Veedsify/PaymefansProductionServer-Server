@@ -2,7 +2,7 @@ const { handleCloudflareProcessedMedia } = require("../../utils/webhooks/handle-
 
 class WebhookController {
       static async ProcessedMedia(req, res) {
-            const handleMedia = await handleCloudflareProcessedMedia(req.body)
+            await handleCloudflareProcessedMedia(req.body)
       }
 }
 
