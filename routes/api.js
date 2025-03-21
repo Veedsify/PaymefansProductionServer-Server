@@ -186,6 +186,7 @@ router.post(
     checkUserIsAuthenticated,
     PointsController.BuyPoints,
 );
+
 // Route To Get Conversion Rate For Points
 router.post("/point/rate", checkUserIsAuthenticated, PointsController.ConversionRate)
 
@@ -247,6 +248,7 @@ router.post(
 router.get("/callback/model/signup", modelController.ValidateModelPayment);
 
 
+
 // Wallet & Transactions & Banks
 router.put("/banks/add", checkUserIsAuthenticated, addBank);
 router.get("/banks", checkUserIsAuthenticated, GetBanks);
@@ -259,7 +261,6 @@ router.get(
 );
 
 // Subscribers
-
 // router.post("/subscribe", checkUserIsAuthenticated, subscriberController.Subscribe);
 
 // router.post("/unsubscribe", checkUserIsAuthenticated, subscriberController.Unsubscribe);
@@ -328,6 +329,7 @@ router.post(
     checkUserIsAuthenticated,
     ConversationsController.SearchMessages,
 );
+
 // Comments
 router.post(
     "/comment/new",
