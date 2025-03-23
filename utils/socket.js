@@ -8,7 +8,6 @@ const {
 const SaveMessageToDb = require("../libs/save-message-db");
 const redis = require("../libs/redis-store");
 // const { ADMIN_PANEL_URL, VERIFICATION_URL, APP_URL, LIVESTREAM_PORT } = process.env;
-
 // const { createClient } = require("redis");
 // const { createAdapter } = require("@socket.io/redis-adapter");
 // const pubClient = createClient({ url: "redis://localhost:6379" });
