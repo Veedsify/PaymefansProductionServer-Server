@@ -30,7 +30,7 @@ class PointsController {
             data.status = true;
             res.status(200).json({ ...data });
         } else {
-            res.status(400)
+            res.status(401)
                 .json({ message: "Sorry you cant buy this package", status: false });
         }
     }
@@ -88,7 +88,7 @@ class PointsController {
             await prismaQuery.$disconnect()
             res.redirect(process.env.APP_URL + "/wallet/");
         } else {
-            res.status(400).json({ status: false });
+            res.status(401).json({ status: false });
         }
     }
     static async GetUserPoints(req, res) {
@@ -103,7 +103,7 @@ class PointsController {
                 status: true,
             });
         } else {
-            res.status(400).json({
+            res.status(401).json({
                 message: "User points not found",
                 status: false,
             });
@@ -129,7 +129,7 @@ class PointsController {
             }
         } catch (error) {
             console.error(error);
-            res.status(400).json({ message: "An error occurred", status: false });
+            res.status(401).json({ message: "An error occurred", status: false });
         }
     }
 

@@ -91,7 +91,7 @@ class authController {
         try {
             // Ensure req.user and req.user.id are valid
             if (!req.user || !req.user.id) {
-                return res.status(400).json({ message: "Invalid request data", status: false });
+                return res.status(401).json({ message: "Invalid request data", status: false });
             }
 
             const user = await prismaQuery.user.findUnique({

@@ -33,7 +33,7 @@ class BanksController {
             })
 
             if (checkBanks) {
-                return res.status(400).json({
+                return res.status(401).json({
                     status: false,
                     message: "Bank account already exists"
                 });

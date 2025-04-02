@@ -9,7 +9,7 @@ class LiveStreamController {
           const handleCreateLiveStream = await createLivestream(title, req)
 
           if (handleCreateLiveStream.error) {
-               return res.status(400).json({ status: 'error', message: handleCreateLiveStream.message });
+               return res.status(401).json({ status: 'error', message: handleCreateLiveStream.message });
           }
 
           res.status(200).json({ status: 'success', message: "Live stream created successfully", data: handleCreateLiveStream.data });
@@ -20,7 +20,7 @@ class LiveStreamController {
 
           if (handleGetStream.error) {
                console.log(handleGetStream.message);
-               return res.status(400).json({ status: 'error', message: handleGetStream.message });
+               return res.status(401).json({ status: 'error', message: handleGetStream.message });
           }
           res.status(200).json({ status: 'success', message: "Live stream fetched successfully", data: handleGetStream.data });
      }
@@ -30,7 +30,7 @@ class LiveStreamController {
 
           if (handleGetStream.error) {
                console.log(handleGetStream.message);
-               return res.status(400).json({ status: 'error', message: handleGetStream.message });
+               return res.status(401).json({ status: 'error', message: handleGetStream.message });
           }
           res.status(200).json({ status: 'success', message: "Live stream fetched successfully", data: handleGetStream.data });
      }
@@ -39,7 +39,7 @@ class LiveStreamController {
           const handleGoLive = await golive(stream_id, req)
           if (handleGoLive.error) {
                console.log(handleGoLive.message);
-               return res.status(400).json({ status: 'error', message: handleGoLive.message });
+               return res.status(401).json({ status: 'error', message: handleGoLive.message });
           }
 
           res.status(200).json({ status: 'success', message: "Live stream is now live", data: handleGoLive.data });

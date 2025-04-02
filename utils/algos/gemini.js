@@ -12,7 +12,7 @@ router.get('/api/feed', async (req, res) => {
     const skip = (page - 1) * limit;
 
     if (!userId) {
-      return res.status(400).json({ error: 'userId is required' });
+      return res.status(401).json({ error: 'userId is required' });
     }
 
     // 1. Fetch users the current user is following

@@ -33,7 +33,7 @@ class PostController {
         }
       }
       if ((!content || content.trim().length === 0) && !visibility) {
-        return res.status(400).json({
+        return res.status(401).json({
           status: false,
           message: "Content and visibility are required",
         });
@@ -583,7 +583,7 @@ class PostController {
     try {
       const update = await UpdatePostAudience(id, post_id, visibility);
       if (update.error) {
-        return res.status(400).json({
+        return res.status(401).json({
           status: false,
           message: update.message,
         });
@@ -666,7 +666,7 @@ class PostController {
       user: req.user,
     });
     if (handleRepost.error) {
-      return res.status(400).json({
+      return res.status(401).json({
         status: false,
         message: handleRepost.message,
       });

@@ -6,7 +6,7 @@ class subscriberController {
         try {
             const data = req.body;
             if (!data) {
-                return res.status(400).json({status: false, message: "Invalid request"});
+                return res.status(401).json({status: false, message: "Invalid request"});
             }
 
             const {main_user_id, user_id} = data;

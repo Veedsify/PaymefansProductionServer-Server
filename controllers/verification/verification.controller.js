@@ -5,7 +5,7 @@ class VerificationController {
      static async StartVerification(req, res) {
           const processUserFaceverification = await ProcessVerification(req)
           if (processUserFaceverification.error) {
-              return res.status(400).json({
+              return res.status(401).json({
                     status: false,
                     message: processUserFaceverification.message
                })
