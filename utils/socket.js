@@ -53,7 +53,7 @@ const serverSocket = async (http) => {
 
     const handleMessage = async (data) => {
       try {
-        const message = await SaveMessageToDb.saveMessage(data);
+        const message = await SaveMessageToDb.SaveMessage(data);
         if (message) {
           socket.to(userRoom).emit("message", {
             ...data,

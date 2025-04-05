@@ -3,7 +3,7 @@ const sanitizeHtml = require("sanitize-html");
 const {v4: uuidv4} = require("uuid");
 
 class SaveMessageToDb {
-    static async saveMessage(data) {
+    static async SaveMessage(data) {
         try {
             // Get the data from the message
             const {
@@ -16,7 +16,7 @@ class SaveMessageToDb {
             } = data;
 
             // Remove points from user
-            const pointsRemoved = await this.reMovePointsFromUser(
+            const pointsRemoved = await this.RemovePointsFromUser(
                 sender_id,
                 receiver_id
             );
@@ -77,7 +77,7 @@ class SaveMessageToDb {
     }
 
     // Remove points from user
-    static async reMovePointsFromUser(sender_id, receiver_id) {
+    static async RemovePointsFromUser(sender_id, receiver_id) {
         const sender = await prismaQuery.user.findFirst({
             where: {
                 user_id: sender_id,
